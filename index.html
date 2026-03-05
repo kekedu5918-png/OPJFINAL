@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#060D18">
+  <meta name="description" content="La référence pour préparer l'examen technique OPJ. 3 épreuves couvertes, QCM, cartouches, simulation compte rendu. Police Nationale et Gendarmerie.">
+  <meta property="og:title" content="OPJ Examen — Qualification OPJ">
+  <meta property="og:description" content="Prépare les 3 épreuves officielles de l'examen OPJ. La seule app mobile dédiée à la qualification judiciaire.">
+  <title>OPJ Examen — Qualification OPJ · Police & Gendarmerie</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    /* ── TOKENS ── */
+    :root {
+      --bg-deep:    #060D18;
+      --bg-base:    #080F1A;
+      --bg-raised:  #0D1829;
+      --bg-overlay: #122035;
+      --border:     #1E3354;
+      --border-mid: #2A4570;
+      --gold:       #F5A623;
+      --gold-hover: #FFB93E;
+      --gold-glow:  rgba(245,166,35,0.18);
+      --gold-sub:   rgba(245,166,35,0.07);
+      --text-1:     #EDF2F7;
+      --text-2:     #94A3B8;
+      --text-3:     #4A6080;
+      --success:    #34D399;
+      --ep1-color:  #A78BFA;
+      --ep2-color:  #60A5FA;
+      --ep3-color:  #34D399;
+      --shadow-gold: 0 0 32px rgba(245,166,35,0.22), 0 0 80px rgba(245,166,35,0.07);
+      --shadow-lg:   0 8px 40px rgba(0,0,0,0.7);
+      --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-full: 9999px;
+      --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+      --ease-smooth: cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ── BASE ── */
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-1);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.028; pointer-events: none; z-index: 9999;
+    }
+    h1,h2,h3,h4 { font-family: 'Syne', sans-serif; font-weight: 700; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    a { text-decoration: none; }
+    img { max-width: 100%; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 96px 0; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(28px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes goldPulse {
+      0%,100% { box-shadow: var(--shadow-gold); }
+      50%      { box-shadow: 0 0 48px rgba(245,166,35,0.35), 0 0 100px rgba(245,166,35,0.12); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-8px); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes rotateSlow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes particleDrift {
+      0%   { transform: translateY(0) translateX(0); opacity:0.6; }
+      100% { transform: translateY(-120px) translateX(20px); opacity:0; }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s var(--ease-smooth), transform 0.7s var(--ease-smooth);
+    }
+    .reveal.visible { opacity:1; transform: translateY(0); }
+    .stagger-1 { transition-delay: 0ms; }
+    .stagger-2 { transition-delay: 100ms; }
+    .stagger-3 { transition-delay: 200ms; }
+    .stagger-4 { transition-delay: 300ms; }
+    .stagger-5 { transition-delay: 400ms; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: 'Syne', sans-serif; font-weight: 600;
+      border: none; cursor: pointer;
+      transition: all 0.2s var(--ease-smooth);
+    }
+    .btn-primary {
+      background: var(--gold); color: var(--bg-deep);
+      padding: 16px 32px; border-radius: var(--r-lg);
+      font-size: 1rem;
+      box-shadow: var(--shadow-gold);
+    }
+    .btn-primary:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(245,166,35,0.4), 0 0 100px rgba(245,166,35,0.15);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-ghost {
+      background: transparent; color: var(--gold);
+      padding: 15px 28px; border-radius: var(--r-lg);
+      border: 1.5px solid rgba(245,166,35,0.35);
+      font-size: 1rem;
+    }
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      background: var(--gold-sub);
+      transform: translateY(-1px);
+    }
+    .btn-lg { padding: 18px 40px; font-size: 1.05rem; }
+    .btn-full { width: 100%; }
+
+    /* ══════════════════════════════════
+       NAVBAR
+    ══════════════════════════════════ */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 24px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(6,13,24,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(30,51,84,0.5);
+      transition: background 0.3s;
+    }
+    .navbar-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.25rem;
+      color: var(--gold);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .navbar-logo-badge {
+      width: 32px; height: 32px;
+      background: var(--gold-sub);
+      border: 1.5px solid rgba(245,166,35,0.3);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .navbar-cta { font-size: 0.9rem; padding: 10px 22px; }
+    .navbar-links {
+      display: flex; gap: 32px; align-items: center;
+    }
+    .navbar-links a {
+      color: var(--text-2); font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .navbar-links a:hover { color: var(--text-1); }
+
+    /* ══════════════════════════════════
+       HERO
+    ══════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(ellipse, rgba(245,166,35,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .particles {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      animation: particleDrift linear infinite;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-sub);
+      border: 1px solid rgba(245,166,35,0.2);
+      border-radius: var(--r-full);
+      padding: 6px 16px;
+      font-size: 0.8rem; color: var(--gold);
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+      margin-bottom: 24px;
+      animation: fadeUp 0.8s var(--ease-smooth) both;
+    }
+    .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+    .hero-title {
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 800; line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      animation: fadeUp 0.8s 0.1s var(--ease-smooth) both;
+    }
+    .hero-title .gold { color: var(--gold); }
+    .hero-subtitle {
+      font-size: 1.05rem; color: var(--text-2); line-height: 1.7;
+      margin-bottom: 16px;
+      animation: fadeUp 0.8s 0.2s var(--ease-smooth) both;
+    }
+    .hero-epreuves {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 36px;
+      animation: fadeUp 0.8s 0.3s var(--ease-smooth) both;
+    }
+    .ep-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: var(--r-full);
+      font-size: 0.78rem; font-weight: 500;
+    }
+    .ep-pill-1 { background: rgba(167,139,250,0.1); color: var(--ep1-color); border: 1px solid rgba(167,139,250,0.2); }
+    .ep-pill-2 { background: rgba(96,165,250,0.1);  color: var(--ep2-color); border: 1px solid rgba(96,165,250,0.2); }
+    .ep-pill-3 { background: rgba(52,211,153,0.1);  color: var(--ep3-color); border: 1px solid rgba(52,211,153,0.2); }
+    .hero-legal {
+      font-size: 0.75rem; color: var(--text-3);
+      margin-bottom: 36px;
+      animation: fadeUp 0.8s 0.35s var(--ease-smooth) both;
+    }
+    .hero-ctas {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.4s var(--ease-smooth) both;
+    }
+
+    /* Phone mockup */
+    .hero-visual {
+      display: flex; justify-content: center; align-items: center;
+      animation: fadeUp 0.8s 0.2s var(--ease-smooth) both;
+    }
+    .phone-wrap {
+      position: relative;
+      animation: float 6s ease-in-out infinite;
+    }
+    .phone {
+      width: 240px; height: 480px;
+      background: var(--bg-raised);
+      border: 2px solid var(--border-mid);
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow-gold), var(--shadow-lg);
+    }
+    .phone::before {
+      content: '';
+      position: absolute; inset: -2px;
+      border-radius: 42px;
+      background: linear-gradient(135deg, rgba(245,166,35,0.3), transparent, rgba(245,166,35,0.1));
+      z-index: -1;
+    }
+    .phone-notch {
+      width: 80px; height: 24px;
+      background: var(--bg-deep);
+      border-radius: 0 0 12px 12px;
+      margin: 0 auto;
+      position: relative; z-index: 2;
+    }
+    .phone-screen {
+      padding: 0 12px 12px;
+      height: calc(100% - 24px);
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .phone-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0;
+    }
+    .phone-logo { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--gold); font-size: 0.85rem; }
+    .phone-streak { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--gold); }
+    .phone-hero-card {
+      background: var(--bg-overlay);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .phone-greeting { font-size: 0.65rem; color: var(--text-2); margin-bottom: 4px; }
+    .phone-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem; font-weight: 700;
+      color: var(--gold); line-height: 1;
+      margin-bottom: 2px;
+    }
+    .phone-score-label { font-size: 0.6rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+    .phone-eps {
+      display: flex; gap: 4px; margin-top: 10px;
+    }
+    .phone-ep {
+      flex: 1; padding: 6px 4px; border-radius: 8px;
+      text-align: center;
+      font-size: 0.55rem; font-weight: 600;
+    }
+    .phone-ep-1 { background: rgba(167,139,250,0.12); color: var(--ep1-color); }
+    .phone-ep-2 { background: rgba(96,165,250,0.12);  color: var(--ep2-color); }
+    .phone-ep-3 { background: rgba(52,211,153,0.12);  color: var(--ep3-color); }
+    .phone-ep-val { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700; display: block; }
+    .phone-cta {
+      background: var(--gold); color: var(--bg-deep);
+      border-radius: 10px; padding: 10px;
+      text-align: center;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.65rem;
+    }
+    .phone-cards {
+      display: flex; gap: 6px;
+    }
+    .phone-card-sm {
+      flex: 1; background: var(--bg-overlay);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 8px;
+    }
+    .phone-card-title { font-size: 0.58rem; color: var(--text-2); margin-bottom: 4px; }
+    .phone-card-val { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; color: var(--text-1); }
+    .phone-progress {
+      background: var(--bg-overlay); border: 1px solid var(--border);
+      border-radius: 10px; padding: 8px;
+    }
+    .phone-progress-label { font-size: 0.58rem; color: var(--text-2); margin-bottom: 6px; }
+    .phone-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 3px; }
+    .phone-bar-fill { height: 100%; border-radius: 2px; }
+    .phone-bar-fill-1 { background: var(--ep1-color); width: 45%; }
+    .phone-bar-fill-2 { background: var(--ep2-color); width: 72%; }
+    .phone-bar-fill-3 { background: var(--ep3-color); width: 30%; }
+    .phone-bar-text { font-size: 0.5rem; color: var(--text-3); display: flex; justify-content: space-between; }
+    .phone-nav {
+      display: flex; justify-content: space-around;
+      padding: 8px 0 4px;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+    .phone-nav-dot {
+      width: 20px; height: 20px; border-radius: 6px;
+      background: var(--border);
+    }
+    .phone-nav-dot.active { background: var(--gold); }
+
+    .phone-deco {
+      position: absolute;
+      background: var(--bg-raised);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--r-lg);
+      padding: 10px 14px;
+      font-size: 0.72rem;
+      white-space: nowrap;
+      box-shadow: var(--shadow-lg);
+    }
+    .phone-deco-1 { top: 60px; right: -80px; }
+    .phone-deco-2 { bottom: 100px; left: -90px; }
+    .phone-deco-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--gold); }
+
+    /* ══════════════════════════════════
+       LÉGITIMITÉ
+    ══════════════════════════════════ */
+    .legit {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-raised);
+    }
+    .legit-inner {
+      display: flex; flex-wrap: wrap;
+      gap: 40px; justify-content: center; align-items: center;
+    }
+    .legit-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.88rem; color: var(--text-2);
+    }
+    .legit-icon { color: var(--gold); font-size: 1.1rem; }
+    .legit-item strong { color: var(--text-1); }
+
+    /* ══════════════════════════════════
+       ÉPREUVES
+    ══════════════════════════════════ */
+    .section-label {
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 16px; display: block;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 800; line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--text-2); max-width: 540px;
+      margin-bottom: 56px;
+    }
+    .epreuves-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .epreuve-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s var(--ease-smooth), border-color 0.3s, box-shadow 0.3s;
+    }
+    .epreuve-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .epreuve-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .epreuve-card-1::before { background: var(--ep1-color); box-shadow: 0 0 20px var(--ep1-color); }
+    .epreuve-card-2::before { background: var(--ep2-color); box-shadow: 0 0 20px var(--ep2-color); }
+    .epreuve-card-3::before { background: var(--ep3-color); box-shadow: 0 0 20px var(--ep3-color); }
+    .epreuve-card:hover { border-color: var(--border-mid); }
+    .epreuve-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; font-weight: 700;
+      margin-bottom: 12px; display: block;
+    }
+    .epreuve-num-1 { color: var(--ep1-color); }
+    .epreuve-num-2 { color: var(--ep2-color); }
+    .epreuve-num-3 { color: var(--ep3-color); }
+    .epreuve-title {
+      font-size: 1.1rem; font-weight: 700;
+      margin-bottom: 8px; line-height: 1.3;
+    }
+    .epreuve-meta {
+      font-size: 0.8rem; color: var(--text-3);
+      margin-bottom: 20px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .epreuve-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .epreuve-features li {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.85rem; color: var(--text-2);
+    }
+    .epreuve-features li::before {
+      content: '';
+      width: 5px; height: 5px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .epreuve-card-1 .epreuve-features li::before { background: var(--ep1-color); }
+    .epreuve-card-2 .epreuve-features li::before { background: var(--ep2-color); }
+    .epreuve-card-3 .epreuve-features li::before { background: var(--ep3-color); }
+    .score-info {
+      margin-top: 48px;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 28px 32px;
+      display: flex; align-items: center; gap: 32px;
+      flex-wrap: wrap;
+    }
+    .score-bloc { text-align: center; }
+    .score-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem; font-weight: 700; color: var(--gold);
+      display: block;
+    }
+    .score-lbl { font-size: 0.78rem; color: var(--text-3); margin-top: 2px; }
+    .score-sep { width: 1px; height: 48px; background: var(--border); }
+    .score-desc { flex: 1; min-width: 200px; }
+    .score-desc p { font-size: 0.9rem; color: var(--text-2); line-height: 1.6; }
+    .score-desc strong { color: var(--text-1); }
+
+    /* ══════════════════════════════════
+       FEATURES
+    ══════════════════════════════════ */
+    .features { background: var(--bg-base); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .feature-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 28px 24px;
+      transition: transform 0.3s var(--ease-smooth), border-color 0.3s;
+    }
+    .feature-card:hover { transform: translateY(-3px); border-color: var(--border-mid); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: var(--r-md);
+      background: var(--gold-sub); border: 1px solid rgba(245,166,35,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 16px;
+    }
+    .feature-title {
+      font-size: 1rem; font-weight: 700; margin-bottom: 8px;
+    }
+    .feature-desc { font-size: 0.85rem; color: var(--text-2); line-height: 1.6; }
+    .feature-badge {
+      display: inline-block; margin-top: 12px;
+      background: var(--gold-sub); color: var(--gold);
+      border: 1px solid rgba(245,166,35,0.2);
+      border-radius: var(--r-full);
+      font-size: 0.68rem; font-weight: 600; padding: 3px 10px;
+    }
+
+    /* ══════════════════════════════════
+       TÉMOIGNAGES
+    ══════════════════════════════════ */
+    .temoignages { background: var(--bg-raised); }
+    .temoignages-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+    }
+    .temoignage-card {
+      background: var(--bg-base);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 28px 24px;
+    }
+    .temoignage-stars {
+      display: flex; gap: 3px; margin-bottom: 16px;
+    }
+    .star { color: var(--gold); font-size: 0.9rem; }
+    .temoignage-text {
+      font-size: 0.92rem; color: var(--text-1);
+      line-height: 1.7; margin-bottom: 20px;
+      font-style: italic;
+    }
+    .temoignage-author {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .author-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--bg-overlay);
+      border: 1.5px solid var(--border-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 0.85rem; color: var(--gold);
+    }
+    .author-name { font-weight: 600; font-size: 0.88rem; }
+    .author-role { font-size: 0.78rem; color: var(--text-3); margin-top: 1px; }
+
+    /* ══════════════════════════════════
+       TARIFS
+    ══════════════════════════════════ */
+    .tarifs { background: var(--bg-base); }
+    .tarifs-header { text-align: center; margin-bottom: 48px; }
+    .tarifs-toggle {
+      display: inline-flex;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-full);
+      padding: 4px;
+      gap: 4px; margin-bottom: 16px;
+    }
+    .toggle-btn {
+      padding: 8px 20px; border-radius: var(--r-full);
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+      font-size: 0.88rem; cursor: pointer; border: none;
+      background: transparent; color: var(--text-2);
+      transition: all 0.2s;
+    }
+    .toggle-btn.active { background: var(--gold); color: var(--bg-deep); }
+    .save-badge {
+      display: inline-block;
+      background: rgba(52,211,153,0.1); color: var(--success);
+      border: 1px solid rgba(52,211,153,0.2);
+      border-radius: var(--r-full);
+      font-size: 0.75rem; padding: 3px 12px;
+      margin-left: 8px;
+    }
+    .tarifs-grid {
+      display: grid; grid-template-columns: 1fr 1.1fr 1fr;
+      gap: 20px; align-items: stretch;
+    }
+    .tarif-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 32px 28px;
+      position: relative;
+    }
+    .tarif-card-pro {
+      border-color: rgba(245,166,35,0.35);
+      background: linear-gradient(180deg, rgba(245,166,35,0.04) 0%, var(--bg-raised) 100%);
+      box-shadow: var(--shadow-gold);
+    }
+    .tarif-popular {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--gold); color: var(--bg-deep);
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: 0.72rem; padding: 4px 16px;
+      border-radius: var(--r-full);
+      white-space: nowrap;
+    }
+    .tarif-name {
+      font-size: 0.85rem; color: var(--text-2); font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .tarif-price {
+      margin-bottom: 6px;
+    }
+    .tarif-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.4rem; font-weight: 700; color: var(--text-1);
+    }
+    .tarif-amount.gold { color: var(--gold); }
+    .tarif-period { font-size: 0.85rem; color: var(--text-3); }
+    .tarif-annual-note {
+      font-size: 0.78rem; color: var(--success);
+      margin-bottom: 24px; min-height: 20px;
+    }
+    .tarif-features {
+      list-style: none; display: flex;
+      flex-direction: column; gap: 10px;
+      margin-bottom: 28px;
+    }
+    .tarif-features li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.85rem; color: var(--text-2);
+    }
+    .check { color: var(--success); flex-shrink: 0; margin-top: 1px; }
+    .cross { color: var(--text-3); flex-shrink: 0; margin-top: 1px; }
+    .tarif-cta { width: 100%; }
+    .tarif-ref {
+      text-align: center; margin-top: 40px;
+      font-size: 0.82rem; color: var(--text-3); line-height: 1.7;
+    }
+    .tarif-ref strong { color: var(--text-2); }
+
+    /* ══════════════════════════════════
+       FAQ
+    ══════════════════════════════════ */
+    .faq { background: var(--bg-raised); }
+    .faq-grid { max-width: 720px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .faq-question {
+      width: 100%; text-align: left;
+      background: none; border: none; cursor: pointer;
+      padding: 22px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px;
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+      font-size: 0.98rem; color: var(--text-1);
+      transition: color 0.2s;
+    }
+    .faq-question:hover { color: var(--gold); }
+    .faq-icon {
+      width: 24px; height: 24px; flex-shrink: 0;
+      background: var(--bg-overlay); border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; color: var(--text-2);
+      transition: all 0.3s var(--ease-smooth);
+    }
+    .faq-item.open .faq-icon {
+      background: var(--gold-sub); border-color: rgba(245,166,35,0.3);
+      color: var(--gold); transform: rotate(45deg);
+    }
+    .faq-answer {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s var(--ease-smooth), padding 0.3s;
+      font-size: 0.9rem; color: var(--text-2); line-height: 1.7;
+    }
+    .faq-item.open .faq-answer { max-height: 200px; padding-bottom: 20px; }
+
+    /* ══════════════════════════════════
+       CTA FINAL
+    ══════════════════════════════════ */
+    .cta-final {
+      background: linear-gradient(135deg, #0A1628 0%, #060D18 50%, #0D1829 100%);
+      text-align: center;
+      padding: 100px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-final::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(245,166,35,0.08) 0%, transparent 70%);
+    }
+    .cta-final-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; margin-bottom: 16px;
+      position: relative;
+    }
+    .cta-final-sub {
+      font-size: 1.05rem; color: var(--text-2);
+      margin-bottom: 40px; position: relative;
+    }
+    .cta-final-ctas {
+      display: flex; gap: 12px; justify-content: center;
+      flex-wrap: wrap; position: relative;
+    }
+    .cta-final-note {
+      margin-top: 20px; font-size: 0.8rem; color: var(--text-3);
+    }
+
+    /* ══════════════════════════════════
+       FOOTER
+    ══════════════════════════════════ */
+    footer {
+      background: var(--bg-deep);
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      color: var(--gold); font-size: 1.1rem;
+    }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 0.85rem; color: var(--text-3); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text-2); }
+    .footer-copy { font-size: 0.78rem; color: var(--text-3); }
+
+    /* ══════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════ */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-visual { display: none; }
+      .hero-epreuves { justify-content: center; }
+      .hero-ctas { justify-content: center; }
+      .epreuves-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .temoignages-grid { grid-template-columns: 1fr; }
+      .tarifs-grid { grid-template-columns: 1fr; }
+      .navbar-links { display: none; }
+      .score-info { flex-direction: column; text-align: center; }
+      .score-sep { width: 80px; height: 1px; }
+      .legit-inner { gap: 24px; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 64px 0; }
+      .features-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+      .hero-ctas .btn { width: 100%; }
+      .cta-final-ctas { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-logo">
+      <div class="navbar-logo-badge">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1L14 4V9C14 12 11 14.5 8 15.5C5 14.5 2 12 2 9V4L8 1Z" fill="rgba(245,166,35,0.2)" stroke="#F5A623" stroke-width="1.2"/>
+          <path d="M5.5 8L7.2 9.8L10.5 6.5" stroke="#F5A623" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      OPJ Examen
+    </div>
+    <div class="navbar-links">
+      <a href="#epreuves">Les épreuves</a>
+      <a href="#features">Fonctionnalités</a>
+      <a href="#tarifs">Tarifs</a>
+    </div>
+    <a href="app.html" class="btn btn-primary navbar-cta">Commencer gratuitement</a>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="hero">
+    <div class="particles" id="particles"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-badge">Qualification OPJ · Police Nationale & Gendarmerie</div>
+          <h1 class="hero-title">
+            Obtiens ta qualification<br>
+            <span class="gold">OPJ du premier coup.</span>
+          </h1>
+          <p class="hero-subtitle">
+            La seule app mobile qui couvre les 3 épreuves officielles de l'examen technique OPJ — avec des features qu'aucun concurrent ne propose.
+          </p>
+          <div class="hero-epreuves">
+            <span class="ep-pill ep-pill-1">⚖️ DPG + DPS · 3h</span>
+            <span class="ep-pill ep-pill-2">📋 PP · 4h</span>
+            <span class="ep-pill ep-pill-3">🎤 Compte rendu · 20min</span>
+          </div>
+          <p class="hero-legal">Programme officiel · Arrêté du 9 août 2016 · Mis à jour 2025</p>
+          <div class="hero-ctas">
+            <a href="app.html" class="btn btn-primary btn-lg">Commencer gratuitement →</a>
+            <a href="#epreuves" class="btn btn-ghost btn-lg">Voir le programme</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="phone-wrap">
+            <div class="phone-deco phone-deco-1">
+              <div style="font-size:0.65rem;color:var(--text-3);margin-bottom:2px;">Score projeté</div>
+              <div class="phone-deco-val">87/120</div>
+            </div>
+            <div class="phone-deco phone-deco-2">
+              <div style="font-size:0.65rem;color:var(--text-3);margin-bottom:2px;">🔥 Streak</div>
+              <div class="phone-deco-val">14 jours</div>
+            </div>
+            <div class="phone">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="phone-header">
+                  <div class="phone-logo">OPJ</div>
+                  <div class="phone-streak">🔥 14</div>
+                </div>
+                <div class="phone-hero-card">
+                  <div class="phone-greeting">Bonjour Thomas 👮</div>
+                  <div class="phone-score">J-47</div>
+                  <div class="phone-score-label">Jours avant l'examen</div>
+                  <div class="phone-eps">
+                    <div class="phone-ep phone-ep-1"><span class="phone-ep-val">14</span>/20</div>
+                    <div class="phone-ep phone-ep-2"><span class="phone-ep-val">16</span>/20</div>
+                    <div class="phone-ep phone-ep-3"><span class="phone-ep-val">13</span>/20</div>
+                  </div>
+                </div>
+                <div class="phone-cta">▶ Commencer ma session</div>
+                <div class="phone-cards">
+                  <div class="phone-card-sm">
+                    <div class="phone-card-title">XP semaine</div>
+                    <div class="phone-card-val" style="color:var(--gold)">+840</div>
+                  </div>
+                  <div class="phone-card-sm">
+                    <div class="phone-card-title">Maîtrise</div>
+                    <div class="phone-card-val">67%</div>
+                  </div>
+                  <div class="phone-card-sm">
+                    <div class="phone-card-title">Rang</div>
+                    <div class="phone-card-val">#3</div>
+                  </div>
+                </div>
+                <div class="phone-progress">
+                  <div class="phone-progress-label">Progression par épreuve</div>
+                  <div class="phone-bar"><div class="phone-bar-fill phone-bar-fill-1"></div></div>
+                  <div class="phone-bar-text"><span>Ep1</span><span>45%</span></div>
+                  <div class="phone-bar" style="margin-top:4px"><div class="phone-bar-fill phone-bar-fill-2"></div></div>
+                  <div class="phone-bar-text"><span>Ep2</span><span>72%</span></div>
+                  <div class="phone-bar" style="margin-top:4px"><div class="phone-bar-fill phone-bar-fill-3"></div></div>
+                  <div class="phone-bar-text"><span>Ep3</span><span>30%</span></div>
+                </div>
+                <div class="phone-nav">
+                  <div class="phone-nav-dot active"></div>
+                  <div class="phone-nav-dot"></div>
+                  <div class="phone-nav-dot"></div>
+                  <div class="phone-nav-dot"></div>
+                  <div class="phone-nav-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LÉGITIMITÉ ── -->
+  <div class="legit">
+    <div class="container">
+      <div class="legit-inner">
+        <div class="legit-item"><span class="legit-icon">⚖️</span> <strong>Programme officiel</strong> — Arrêté 9 août 2016</div>
+        <div class="legit-item"><span class="legit-icon">🚓</span> <strong>Police Nationale</strong> & Gendarmerie</div>
+        <div class="legit-item"><span class="legit-icon">📱</span> Révise <strong>entre tes gardes</strong> — 5 min suffisent</div>
+        <div class="legit-item"><span class="legit-icon">📅</span> Examen PN 2026 : <strong>20 mai 2026</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ÉPREUVES ── -->
+  <section id="epreuves">
+    <div class="container">
+      <span class="section-label reveal">Les 3 épreuves officielles</span>
+      <h2 class="section-title reveal stagger-1">Tout le programme.<br>Dans une seule app.</h2>
+      <p class="section-sub reveal stagger-2">OPJ Examen est la seule application qui couvre intégralement les 3 épreuves de l'arrêté officiel. Pas de raccourci. Pas de contenu manquant.</p>
+
+      <div class="epreuves-grid">
+        <div class="epreuve-card epreuve-card-1 reveal stagger-1">
+          <span class="epreuve-num epreuve-num-1">ÉPREUVE 1 · COEFF. 2</span>
+          <h3 class="epreuve-title">Droit Pénal Général + Droit Pénal Spécial</h3>
+          <p class="epreuve-meta">Écrit · 3 heures · Élim. ≤ 5/20</p>
+          <ul class="epreuve-features">
+            <li>QCM avec explications juridiques</li>
+            <li>40+ infractions — 7 éléments chacune</li>
+            <li>Mémorisation par flashcards SM-2</li>
+            <li>Peines, aggravantes, infractions voisines</li>
+          </ul>
+        </div>
+        <div class="epreuve-card epreuve-card-2 reveal stagger-2">
+          <span class="epreuve-num epreuve-num-2">ÉPREUVE 2 · COEFF. 3</span>
+          <h3 class="epreuve-title">Procédure Pénale sur cas de crime ou délit</h3>
+          <p class="epreuve-meta">Écrit · 4 heures · Élim. ≤ 5/20</p>
+          <ul class="epreuve-features">
+            <li>QCM GAV, Flagrance, Perquisitions</li>
+            <li>Constructeur de cartouches (exclusif)</li>
+            <li>Cas pratiques + corrigés type</li>
+            <li>Timeline des délais interactive</li>
+          </ul>
+        </div>
+        <div class="epreuve-card epreuve-card-3 reveal stagger-3">
+          <span class="epreuve-num epreuve-num-3">ÉPREUVE 3 · COEFF. 1</span>
+          <h3 class="epreuve-title">Simulation compte rendu téléphonique au parquet</h3>
+          <p class="epreuve-meta">PN : oral 20 min · GN : écrit 1h · Élim. ≤ 5/20</p>
+          <ul class="epreuve-features">
+            <li>Simulation réaliste (PN oral / GN écrit)</li>
+            <li>7 scénarios types commentés</li>
+            <li>Grille d'évaluation /20 automatique</li>
+            <li>Structure guidée en 6 points</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="score-info reveal">
+        <div class="score-bloc">
+          <span class="score-val">120</span>
+          <div class="score-lbl">Points maximum</div>
+        </div>
+        <div class="score-sep"></div>
+        <div class="score-bloc">
+          <span class="score-val" style="color:var(--success)">60</span>
+          <div class="score-lbl">Seuil d'admission</div>
+        </div>
+        <div class="score-sep"></div>
+        <div class="score-bloc">
+          <span class="score-val" style="color:var(--ep1-color)">5</span>
+          <div class="score-lbl">Note éliminatoire (≤)</div>
+        </div>
+        <div class="score-sep"></div>
+        <div class="score-desc">
+          <p><strong>Score calculé en temps réel dans l'app.</strong> Ep1×2 + Ep2×3 + Ep3×1. Si une seule épreuve tombe à 5/20 ou moins, tu es éliminé — peu importe ton total. L'app t'alerte dès que tu approches du seuil.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section class="features" id="features">
+    <div class="container">
+      <span class="section-label reveal">Fonctionnalités</span>
+      <h2 class="section-title reveal stagger-1">Des features qu'aucun<br>concurrent ne propose.</h2>
+      <p class="section-sub reveal stagger-2">Pas un livre. Pas un site générique. Une app construite précisément pour l'examen technique OPJ.</p>
+
+      <div class="features-grid">
+        <div class="feature-card reveal stagger-1">
+          <div class="feature-icon">📋</div>
+          <h3 class="feature-title">Constructeur de cartouches</h3>
+          <p class="feature-desc">Reconstitue l'enchaînement des actes d'une procédure dans l'ordre. Quel acte ? Quel article ? Dans quel délai ? Validation en temps réel.</p>
+          <span class="feature-badge">EXCLUSIF</span>
+        </div>
+        <div class="feature-card reveal stagger-2">
+          <div class="feature-icon">🎤</div>
+          <h3 class="feature-title">Simulation compte rendu</h3>
+          <p class="feature-desc">Simulation réaliste du compte rendu téléphonique au parquet. 7 scénarios, grille d'évaluation /20, compte rendu modèle révélé.</p>
+          <span class="feature-badge">EXCLUSIF</span>
+        </div>
+        <div class="feature-card reveal stagger-3">
+          <div class="feature-icon">⚖️</div>
+          <h3 class="feature-title">Mémorisation des infractions</h3>
+          <p class="feature-desc">40+ infractions complètes avec les 7 éléments obligatoires : article, définition, élément matériel, moral, peines, aggravantes, infractions voisines.</p>
+        </div>
+        <div class="feature-card reveal stagger-1">
+          <div class="feature-icon">🎯</div>
+          <h3 class="feature-title">QCM avec explications juridiques</h3>
+          <p class="feature-desc">Après chaque erreur : explication complète, article de loi exact, piège classique identifié. Apprendre, pas juste mémoriser.</p>
+        </div>
+        <div class="feature-card reveal stagger-2">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">Score /120 par épreuve</h3>
+          <p class="feature-desc">Note prédite par épreuve avec alerte si zone éliminatoire (≤5/20). Score total projeté sur 120. Sais exactement où tu en es.</p>
+        </div>
+        <div class="feature-card reveal stagger-3">
+          <div class="feature-icon">🎖️</div>
+          <h3 class="feature-title">Grades réels de la Police</h3>
+          <p class="feature-desc">Progresse dans les vrais grades : Gardien Élève → Gardien Stagiaire → Brigadier-Chef → Major → Lieutenant... jusqu'à OPJ Expert.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TÉMOIGNAGES ── -->
+  <section class="temoignages">
+    <div class="container">
+      <span class="section-label reveal" style="text-align:center;display:block">Ils ont réussi</span>
+      <h2 class="section-title reveal stagger-1" style="text-align:center;margin-bottom:48px">Ce que disent ceux<br>qui ont passé l'examen.</h2>
+      <div class="temoignages-grid">
+        <div class="temoignage-card reveal stagger-1">
+          <div class="temoignage-stars">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="temoignage-text">"Reçu à l'examen OPJ après 4 mois sur l'app. La simulation compte rendu, c'est ce qui m'a fait passer l'oral. Rien d'autre ne proposait ça."</p>
+          <div class="temoignage-author">
+            <div class="author-avatar">K.M</div>
+            <div>
+              <div class="author-name">Kévin M.</div>
+              <div class="author-role">Gardien de la Paix · Île-de-France</div>
+            </div>
+          </div>
+        </div>
+        <div class="temoignage-card reveal stagger-2">
+          <div class="temoignage-stars">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="temoignage-text">"La mémorisation des infractions en flashcards, je n'avais jamais rien vu d'aussi efficace. 16/20 à l'épreuve PP. Le constructeur de cartouches, mes collègues me l'ont envié."</p>
+          <div class="temoignage-author">
+            <div class="author-avatar">A.L</div>
+            <div>
+              <div class="author-name">Amandine L.</div>
+              <div class="author-role">Brigadier-Chef · Bretagne</div>
+            </div>
+          </div>
+        </div>
+        <div class="temoignage-card reveal stagger-3">
+          <div class="temoignage-stars">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="temoignage-text">"Je révisais 15 min par jour entre mes gardes. L'alerte de zone éliminatoire m'a sauvé — j'aurais raté l'Épreuve 1 sans elle. Validé au premier essai."</p>
+          <div class="temoignage-author">
+            <div class="author-avatar">T.G</div>
+            <div>
+              <div class="author-name">Thomas G.</div>
+              <div class="author-role">Gendarme · Occitanie</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TARIFS ── -->
+  <section class="tarifs" id="tarifs">
+    <div class="container">
+      <div class="tarifs-header">
+        <span class="section-label reveal">Tarifs</span>
+        <h2 class="section-title reveal stagger-1">Moins cher qu'une heure<br>de prépa physique.</h2>
+        <div class="reveal stagger-2">
+          <div class="tarifs-toggle">
+            <button class="toggle-btn active" id="btn-mensuel" type="button" onclick="setToggle('mensuel')">Mensuel</button>
+            <button class="toggle-btn" id="btn-annuel" type="button" onclick="setToggle('annuel')">Annuel <span class="save-badge">−50%</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tarifs-grid reveal">
+        <div class="tarif-card">
+          <div class="tarif-name">Gratuit</div>
+          <div class="tarif-price">
+            <span class="tarif-amount">0€</span>
+          </div>
+          <div class="tarif-annual-note">&nbsp;</div>
+          <ul class="tarif-features">
+            <li><span class="check">✓</span> Épreuve 2 PP — QCM complets</li>
+            <li><span class="check">✓</span> Leçons Flagrance + GAV</li>
+            <li><span class="check">✓</span> 3 sessions de 10 QCM/jour</li>
+            <li><span class="check">✓</span> 2 simulations compte rendu</li>
+            <li><span class="check">✓</span> 3 cartouches (apprentissage)</li>
+            <li><span class="cross">—</span> Explications après QCM</li>
+            <li><span class="cross">—</span> Épreuve 1 (DPG + DPS)</li>
+            <li><span class="cross">—</span> 40+ infractions complètes</li>
+          </ul>
+          <a href="app.html" class="btn btn-ghost tarif-cta">Commencer gratuitement</a>
+        </div>
+
+        <div class="tarif-card tarif-card-pro">
+          <div class="tarif-popular">⭐ Le plus populaire</div>
+          <div class="tarif-name" style="color:var(--gold)">OPJ PRO</div>
+          <div class="tarif-price">
+            <span class="tarif-amount gold" id="price-amount">9,99€</span>
+            <span class="tarif-period" id="price-period">/mois</span>
+          </div>
+          <div class="tarif-annual-note" id="annual-note">&nbsp;</div>
+          <ul class="tarif-features">
+            <li><span class="check">✓</span> <strong>Tout le gratuit</strong></li>
+            <li><span class="check">✓</span> Épreuve 1 complète (DPG + DPS)</li>
+            <li><span class="check">✓</span> Explications juridiques détaillées</li>
+            <li><span class="check">✓</span> QCM illimités + annales</li>
+            <li><span class="check">✓</span> 40+ infractions (7 éléments)</li>
+            <li><span class="check">✓</span> Toutes les cartouches + construction</li>
+            <li><span class="check">✓</span> 7 simulations compte rendu</li>
+            <li><span class="check">✓</span> Score /120 + alertes éliminatoires</li>
+          </ul>
+          <a href="app.html" class="btn btn-primary tarif-cta" style="animation: goldPulse 3s ease-in-out infinite;">Commencer l'essai gratuit →</a>
+        </div>
+
+        <div class="tarif-card">
+          <div class="tarif-name">Coup de feu · 30 jours</div>
+          <div class="tarif-price">
+            <span class="tarif-amount">14,99€</span>
+          </div>
+          <div class="tarif-annual-note" style="color:var(--text-3)">Accès unique 30 jours</div>
+          <ul class="tarif-features">
+            <li><span class="check">✓</span> Accès PRO complet 30 jours</li>
+            <li><span class="check">✓</span> Idéal dernière ligne droite</li>
+            <li><span class="check">✓</span> Paiement unique, sans abonnement</li>
+            <li><span class="check">✓</span> Toutes les features PRO</li>
+            <li><span class="check">✓</span> Mode examen intensif</li>
+          </ul>
+          <a href="app.html" class="btn btn-ghost tarif-cta">Choisir ce plan</a>
+        </div>
+      </div>
+
+      <p class="tarif-ref reveal">
+        <strong>Prépa physique Sup'Admission :</strong> 5 500 à 7 900 €/an · <strong>Fiches La Baule :</strong> 188 € (papier, sans interactivité)<br>
+        OPJ PRO annuel : <strong>59,99 €</strong> · Satisfait ou remboursé 14 jours · 7 jours d'essai gratuit · Annulable à tout moment
+      </p>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section class="faq">
+    <div class="container">
+      <h2 class="section-title reveal" style="text-align:center;margin-bottom:48px">Questions fréquentes</h2>
+      <div class="faq-grid">
+        <div class="faq-item reveal">
+          <button class="faq-question" type="button" onclick="toggleFaq(this)">
+            C'est quoi exactement la qualification OPJ ?
+            <div class="faq-icon">+</div>
+          </button>
+          <div class="faq-answer">La qualification d'Officier de Police Judiciaire est une habilitation judiciaire qui permet à un policier ou gendarme d'effectuer des actes d'enquête sous le contrôle du parquet. Elle s'obtient par un examen technique (3 épreuves) après 24 mois de service minimum. Les officiers (lieutenants, capitaines...) l'obtiennent automatiquement à leur sortie d'école.</div>
+        </div>
+        <div class="faq-item reveal stagger-1">
+          <button class="faq-question" type="button" onclick="toggleFaq(this)">
+            Qui peut passer cet examen ?
+            <div class="faq-icon">+</div>
+          </button>
+          <div class="faq-answer">Les gardiens de la paix, brigadiers-chefs et majors de police avec au moins 24 mois de service (arrêté du 22 décembre 2023). Pour la Gendarmerie : les gendarmes avec 24 mois de service minimum. NE PAS confondre avec le concours d'officier de police (corps de commandement) qui est un concours de recrutement différent.</div>
+        </div>
+        <div class="faq-item reveal stagger-2">
+          <button class="faq-question" type="button" onclick="toggleFaq(this)">
+            L'app couvre Police Nationale ET Gendarmerie ?
+            <div class="faq-icon">+</div>
+          </button>
+          <div class="faq-answer">Oui. Un toggle PN/GN dans les paramètres adapte l'app à ton corps : les coefficients des épreuves sont ajustés (Ep2 coeff. 3 en GN), l'Épreuve 3 passe en mode "écrit 1 heure" pour la GN (contre oral 20 min pour la PN), et la date d'examen est adaptée (PN : 20 mai 2026 · GN : dernier trimestre).</div>
+        </div>
+        <div class="faq-item reveal stagger-3">
+          <button class="faq-question" type="button" onclick="toggleFaq(this)">
+            Est-ce que ça marche hors connexion ?
+            <div class="faq-icon">+</div>
+          </button>
+          <div class="faq-answer">Oui. L'app est une PWA (Progressive Web App) installable sur ton téléphone comme une vraie app. Une fois installée, tout le contenu est disponible hors ligne. Tu peux réviser dans le métro, au vestiaire, ou en garde sans connexion internet.</div>
+        </div>
+        <div class="faq-item reveal stagger-4">
+          <button class="faq-question" type="button" onclick="toggleFaq(this)">
+            Y a-t-il une période d'essai gratuite ?
+            <div class="faq-icon">+</div>
+          </button>
+          <div class="faq-answer">Oui. Le plan Gratuit est permanent (pas de limite de temps). L'accès PRO inclut 7 jours d'essai gratuit sans carte bancaire. Une offre d'essai est aussi proposée automatiquement après quelques jours d'utilisation.</div>
+        </div>
+        <div class="faq-item reveal stagger-5">
+          <button class="faq-question" type="button" onclick="toggleFaq(this)">
+            Le contenu est-il à jour avec les dernières réformes ?
+            <div class="faq-icon">+</div>
+          </button>
+          <div class="faq-answer">Oui. L'app intègre un système d'alertes de mise à jour légale. Quand une loi modifie le CP ou le CPP (comme la loi narcotrafic de juin 2025), une notification s'affiche avec l'impact sur les questions concernées. Les questions et fiches affectées sont marquées "mis à jour".</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FINAL ── -->
+  <section class="cta-final">
+    <div class="container">
+      <h2 class="cta-final-title reveal">Commence ta préparation<br><span style="color:var(--gold)">maintenant.</span></h2>
+      <p class="cta-final-sub reveal stagger-1">L'examen PN 2026 c'est le 20 mai. Chaque jour compte.</p>
+      <div class="cta-final-ctas reveal stagger-2">
+        <a href="app.html" class="btn btn-primary btn-lg">Commencer gratuitement →</a>
+        <a href="#tarifs" class="btn btn-ghost btn-lg">Voir les offres PRO</a>
+      </div>
+      <p class="cta-final-note reveal stagger-3">Aucune carte bancaire requise · 7 jours d'essai PRO gratuit</p>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">OPJ Examen</div>
+        <div class="footer-links">
+          <a href="mailto:contact@blocopj.fr">Contact</a>
+          <a href="#">Mentions légales</a>
+          <a href="#">CGU</a>
+        </div>
+        <div class="footer-copy">© 2026 OPJ Examen · Tous droits réservés</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const container = document.getElementById('particles');
+    if (container) {
+      for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.cssText = `
+          left: ${Math.random() * 100}%;
+          top: ${Math.random() * 100}%;
+          animation-duration: ${5 + Math.random() * 8}s;
+          animation-delay: ${Math.random() * 6}s;
+          width: ${1 + Math.random()}px;
+          height: ${1 + Math.random()}px;
+          opacity: ${0.2 + Math.random() * 0.4};
+        `;
+        container.appendChild(p);
+      }
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (nav) nav.style.background = window.scrollY > 60 ? 'rgba(6,13,24,0.97)' : 'rgba(6,13,24,0.85)';
+    });
+
+    function setToggle(mode) {
+      const btnM = document.getElementById('btn-mensuel');
+      const btnA = document.getElementById('btn-annuel');
+      const amount = document.getElementById('price-amount');
+      const period = document.getElementById('price-period');
+      const note = document.getElementById('annual-note');
+      if (mode === 'annuel') {
+        btnA.classList.add('active'); btnM.classList.remove('active');
+        if (amount) amount.textContent = '59,99€';
+        if (period) period.textContent = '/an';
+        if (note) { note.textContent = '→ Soit 5€/mois · Économisez 60€'; note.style.color = 'var(--success)'; }
+      } else {
+        btnM.classList.add('active'); btnA.classList.remove('active');
+        if (amount) amount.textContent = '9,99€';
+        if (period) period.textContent = '/mois';
+        if (note) note.innerHTML = '&nbsp;';
+      }
+    }
+
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+  </script>
+
+</body>
+</html>

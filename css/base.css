@@ -1,0 +1,108 @@
+/**
+ * OPJ EXAMEN — Reset et fondations
+ * Reset moderne, typographie globale, structure app, scrollbar, grain.
+ */
+
+/* Reset moderne */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
+  color: var(--c-text-primary);
+  background: var(--c-bg-base);
+  overflow-x: hidden;
+  min-height: 100dvh;
+}
+
+/* Structure app */
+.app-container {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  position: relative;
+  overflow: hidden;
+}
+
+.screen-container {
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding-bottom: calc(60px + env(safe-area-inset-bottom));
+}
+
+/* Cache la scrollbar mais garde la fonctionnalité */
+.screen-container::-webkit-scrollbar {
+  display: none;
+}
+
+.screen-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Typographie */
+h1, h2, h3, h4 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+
+.mono,
+.score,
+.xp,
+.timer {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Selection */
+::selection {
+  background: var(--c-gold-glow);
+  color: var(--c-gold);
+}
+
+/* Scrollbar custom (desktop) */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--c-bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--c-border-mid);
+  border-radius: 2px;
+}
+
+/* Grain texture subtile sur le body */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Safe area padding pour iPhone notch */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
