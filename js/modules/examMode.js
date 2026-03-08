@@ -68,10 +68,12 @@ function getAllQcm() {
 }
 
 function filterByConfig(config) {
+  const isPro = (window.AppState.getState('pro') || {}).isActive === true;
   const all = getAllQcm();
   let pool = all.filter(q => {
     if (config.epreuve === 'all') return true;
-    if (config.epreuve === 'ep1') return q.epreuve === 1;
+    // EP1 = PRO only — double gate
+    if (config.epreuve === 'ep1') return q.epreuve === 1 && isPro;
     if (config.epreuve === 'ep2') return q.epreuve === 2;
     return false;
   });
@@ -113,7 +115,8 @@ function stopTimer() {
 function renderSelect(container) {
   const isPro = (window.AppState.getState('pro') || {}).isActive === true;
   const totalSessions = window.AppState.getState('gamification.totalSessions') || 0;
-  const canFull = isPro || totalSessions >= 5;
+  // Mode Complet = PRO uniquement (contient EP1 qui est PRO)
+  const canFull = isPro;
 
   container.innerHTML = `
     <div class="exam-select-screen">
@@ -147,10 +150,10 @@ function renderSelect(container) {
         }).join('')}
       </div>
 
-      ${totalSessions < 5 && !isPro ? `
+      ${!isPro ? `
         <div class="exam-unlock-tip">
-          💡 Le mode Complet (EP1+EP2) se débloque après 5 sessions QCM ou avec PRO.
-          Tu en es à <strong>${totalSessions}/5</strong>.
+          🔒 Le mode Complet (EP1+EP2) est réservé aux abonnés PRO — EP1 inclut DPG et DPS.
+          <button type="button" class="btn btn-ghost btn-sm" data-route="pro" style="margin-top:var(--s-2);width:100%">Passer PRO →</button>
         </div>
       ` : ''}
     </div>

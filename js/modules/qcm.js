@@ -374,13 +374,13 @@ function renderQuestion(container) {
   });
 
   container.querySelector('[data-qcm-close]')?.addEventListener('click', () => {
-    if (confirm('Quitter la session en cours ?')) {
+    showQcmQuitModal(() => {
       window.qcmActive = false;
       sessionState.questions = [];
       sessionState.index = 0;
       sessionState.answers = [];
       window.Router.navigate('#train');
-    }
+    });
   });
 }
 
@@ -420,6 +420,14 @@ function renderResults(container) {
   const score = total ? Math.round((correct / total) * 20 * 10) / 10 : 0;
   const xpGained = sessionState.answers.filter((a) => a.correct).length * XP_PER_CORRECT;
   recordSessionResult();
+  // Badge session parfaite
+  if (correct === total && total >= 5) {
+    window.AppState.dispatch('UNLOCK_BADGE', { id: 'perfect_session' });
+  }
+  // Badge combo_10 (déjà déclenché dans le combo mais on s'assure ici aussi)
+  if ((window.AppState.getState('gamification.comboCount') || 0) >= 10) {
+    window.AppState.dispatch('UNLOCK_BADGE', { id: 'combo_10' });
+  }
   window.Notifications.maybeAskPermissionAfterSession().catch(() => {});
   // Proposer les notifs après 3 sessions (prompt engageant)
   if (((window.AppState.getState('gamification.totalSessions') || 0) === 3) && !window.AppState.getState('settings.permissionAsked')) {
@@ -530,6 +538,29 @@ function renderResults(container) {
  * @param {HTMLElement} container
  * @param {object} params - route params
  */
+/**
+ * Modal de confirmation pour quitter le QCM (remplace confirm() bloquant).
+ */
+function showQcmQuitModal(onConfirm) {
+  const mc = document.getElementById('modal-container') || document.body;
+  const el = document.createElement('div');
+  el.className = 'qcm-quit-modal';
+  el.innerHTML = `
+    <div class="qcm-quit-inner">
+      <p class="qcm-quit-title">Quitter la session ?</p>
+      <p class="qcm-quit-sub">Ta progression de cette session ne sera pas sauvegardée.</p>
+      <div class="qcm-quit-actions">
+        <button type="button" class="btn btn-primary btn-full" id="qcm-quit-cancel">Continuer →</button>
+        <button type="button" class="btn btn-ghost btn-full" id="qcm-quit-confirm">Quitter</button>
+      </div>
+    </div>
+  `;
+  mc.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('qcm-quit-visible'));
+  el.querySelector('#qcm-quit-cancel')?.addEventListener('click', () => el.remove());
+  el.querySelector('#qcm-quit-confirm')?.addEventListener('click', () => { el.remove(); onConfirm(); });
+}
+
 function render(container) {
   currentContainer = container;
   const route = window.Router.getCurrentRoute();

@@ -53,9 +53,10 @@ function getGlobalMasteryPct() {
   const m1 = getMasteryPct('ep1');
   const m2 = getMasteryPct('ep2');
   const m3 = getMasteryPct('ep3');
-  const count = [m1, m2, m3].filter(() => true).length;
+  const values = [m1, m2, m3].filter(v => v > 0);
+  const count = values.length;
   if (count === 0) return 0;
-  return Math.round((m1 + m2 + m3) / 3);
+  return Math.round((m1 + m2 + m3) / count);
 }
 
 /**
