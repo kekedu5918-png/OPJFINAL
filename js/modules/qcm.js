@@ -48,72 +48,70 @@ function filterQuestions(filters) {
 }
 
 /**
- * Sons (Web Audio API) — uniquement si settings.sound.
+ * Sons (Web Audio API) — lazy init sur premier geste (iOS exige un user gesture).
  */
-const audioCtx = typeof AudioContext !== 'undefined' ? new (window.AudioContext || window.webkitAudioContext)() : null;
+let audioCtx = null;
+function getAudioCtx() {
+  if (audioCtx) return audioCtx;
+  if (typeof AudioContext !== 'undefined' || typeof window.webkitAudioContext !== 'undefined') {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+  }
+  return audioCtx;
+}
 
 function playSoundGood() {
-  if (!window.AppState.getState('settings.sound') || !audioCtx) return;
+  const ctx = getAudioCtx();
+  if (!window.AppState.getState('settings.sound') || !ctx) return;
   try {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.frequency.setValueAtTime(523, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(659, audioCtx.currentTime + 0.15);
-    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-    osc.start(audioCtx.currentTime);
-    osc.stop(audioCtx.currentTime + 0.15);
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(523, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(659, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.15);
   } catch (e) {}
 }
 
 function playSoundBad() {
-  if (!window.AppState.getState('settings.sound') || !audioCtx) return;
+  const ctx = getAudioCtx();
+  if (!window.AppState.getState('settings.sound') || !ctx) return;
   try {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-    osc.start(audioCtx.currentTime);
-    osc.stop(audioCtx.currentTime + 0.2);
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, ctx.currentTime);
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.2);
   } catch (e) {}
 }
 
 function playSoundCombo() {
-  if (!window.AppState.getState('settings.sound') || !audioCtx) return;
+  const ctx = getAudioCtx();
+  if (!window.AppState.getState('settings.sound') || !ctx) return;
   try {
     [523, 659, 784, 1047].forEach((freq, i) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.08);
-      gain.gain.setValueAtTime(0.12, audioCtx.currentTime + i * 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.08 + 0.15);
-      osc.start(audioCtx.currentTime + i * 0.08);
-      osc.stop(audioCtx.currentTime + i * 0.08 + 0.15);
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.08);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.08 + 0.15);
+      osc.start(ctx.currentTime + i * 0.08); osc.stop(ctx.currentTime + i * 0.08 + 0.15);
     });
   } catch (e) {}
 }
 
 function playSoundPerfect() {
-  if (!window.AppState.getState('settings.sound') || !audioCtx) return;
+  const ctx = getAudioCtx();
+  if (!window.AppState.getState('settings.sound') || !ctx) return;
   try {
     [523, 587, 659, 698, 784].forEach((freq, i) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.12);
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime + i * 0.12);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.12 + 0.2);
-      osc.start(audioCtx.currentTime + i * 0.12);
-      osc.stop(audioCtx.currentTime + i * 0.12 + 0.2);
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.12);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.12 + 0.2);
+      osc.start(ctx.currentTime + i * 0.12); osc.stop(ctx.currentTime + i * 0.12 + 0.2);
     });
   } catch (e) {}
 }
@@ -333,7 +331,8 @@ function renderQuestion(container) {
     overlay.style.display = '';
     drawer.classList.add('qcm-drawer-visible');
     overlay.classList.add('qcm-drawer-visible');
-    container.querySelector('[data-qcm-next]')?.addEventListener('click', goNext);
+    // Le drawer est dans #modal-container, donc on cherche dans document
+    (drawer.querySelector('[data-qcm-next]') || document.querySelector('[data-qcm-next]'))?.addEventListener('click', goNext);
   };
 
   container.querySelectorAll('[data-qcm-answer]').forEach((btn) => {
@@ -422,6 +421,10 @@ function renderResults(container) {
   const xpGained = sessionState.answers.filter((a) => a.correct).length * XP_PER_CORRECT;
   recordSessionResult();
   window.Notifications.maybeAskPermissionAfterSession().catch(() => {});
+  // Proposer les notifs après 3 sessions (prompt engageant)
+  if (((window.AppState.getState('gamification.totalSessions') || 0) === 3) && !window.AppState.getState('settings.permissionAsked')) {
+    setTimeout(() => window.Notifications.showPermissionPrompt?.(), 1500);
+  }
   if (!window.Paywall.canAccessQcmSession()) window.Paywall.showSessionsExhaustedModal();
   if (score > 16) window.Paywall.showGoodScoreToast();
   const dangerEpreuve = score <= 5 ? (sessionState.questions[0]?.epreuve === 1 ? 'ep1' : 'ep2') : null;

@@ -182,7 +182,7 @@ function getNotificationsToSendNow() {
   }
 
   const sm2 = window.AppState.getState('progress.infractions.sm2') || {};
-  const dueToday = Object.values(sm2).filter((v) => v && v.due === today).length;
+  const dueToday = Object.values(sm2).filter((v) => v && v.due <= today).length;
   if (dueToday > 0 && now.getHours() >= hour && now.getMinutes() >= minute) {
     toSend.push(NOTIF_TYPES.CARDS_DUE);
   }
@@ -228,8 +228,71 @@ function urlBase64ToUint8Array(base64String) {
   return output;
 }
 
+/**
+ * Affiche un bottom sheet engageant pour demander la permission de notification.
+ * Beaucoup plus efficace que l'alerte native brute.
+ */
+function showPermissionPrompt() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'default') return;
+  if (document.getElementById('notif-prompt')) return;
+
+  const streak = window.AppState.getState('gamification.streak') || 0;
+  const days = window.AppState.daysUntilExam();
+
+  const prompt = document.createElement('div');
+  prompt.id = 'notif-prompt';
+  prompt.className = 'notif-prompt';
+  prompt.innerHTML = `
+    <div class="notif-prompt-inner">
+      <button type="button" class="notif-prompt-close" id="notif-close">✕</button>
+      <div class="notif-prompt-icon">🔔</div>
+      <h3 class="notif-prompt-title">Ne rate pas une session</h3>
+      <p class="notif-prompt-sub">
+        ${streak > 0 ? `Ta série de ${streak} jours mérite d'être protégée.` : days !== null ? `Il te reste ${days} jours — sois rappelé(e) chaque matin.` : 'Rappels quotidiens, alertes éliminatoires, cartes dues.'}
+      </p>
+      <div class="notif-prompt-benefits">
+        <div class="notif-benefit">🔥 Rappel si ta série est en danger</div>
+        <div class="notif-benefit">🃏 Alerte quand tes cartes sont dues</div>
+        <div class="notif-benefit">⚠️ Alerte zone éliminatoire</div>
+      </div>
+      <button type="button" class="btn btn-primary btn-full" id="notif-allow">Activer les rappels</button>
+      <button type="button" class="btn btn-ghost btn-full" id="notif-deny">Non merci</button>
+    </div>
+  `;
+
+  const container = document.getElementById('modal-container') || document.body;
+  container.appendChild(prompt);
+  requestAnimationFrame(() => prompt.classList.add('notif-prompt-visible'));
+
+  const close = () => { prompt.classList.remove('notif-prompt-visible'); setTimeout(() => prompt.remove(), 350); };
+  prompt.querySelector('#notif-close')?.addEventListener('click', close);
+  prompt.querySelector('#notif-deny')?.addEventListener('click', () => {
+    window.AppState.dispatch('UPDATE_SETTINGS', { permissionAsked: true });
+    close();
+  });
+  prompt.querySelector('#notif-allow')?.addEventListener('click', async () => {
+    close();
+    await new Promise(r => setTimeout(r, 300));
+    const perm = await askPermission();
+    if (perm === 'granted') {
+      const toast = document.createElement('div');
+      toast.className = 'badge-toast anim-fadeup';
+      toast.innerHTML = '<span class="badge-toast-icon">🔔</span><div><p class="badge-toast-title">Rappels activés !</p><p class="badge-toast-label">On veille sur ta préparation.</p></div>';
+      (document.getElementById('toast-container') || document.body).appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+  });
+}
+
 function init() {
-  // L'app peut appeler maybeAskPermissionAfterSession() après chaque session enregistrée.
+  // Vérifie périodiquement les conditions de notification
+  setTimeout(() => {
+    try {
+      const toSend = getNotificationsToSendNow();
+      toSend.forEach(type => showLocalNotification(type).catch(() => {}));
+    } catch (e) {}
+  }, 5000);
 }
 window.Notifications = {
   NOTIF_TYPES,
@@ -238,6 +301,7 @@ window.Notifications = {
   areNotificationsEnabled,
   getNotificationContent,
   showLocalNotification,
+  showPermissionPrompt,
   maybeAskPermissionAfterSession,
   getNotificationsToSendNow,
   subscribeToPush,

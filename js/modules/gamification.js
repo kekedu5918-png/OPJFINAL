@@ -108,7 +108,7 @@ function renderProfile(container) {
         </div>
         <div class="profile-hero-info">
           <h1 class="profile-name">${user.name || 'Agent'}</h1>
-          <p class="profile-corps">${user.corps === 'gn' ? 'Gendarmerie Nationale' : user.corps === 'pn' ? 'Police Nationale' : 'Police / Gendarmerie'}</p>
+          <p class="profile-corps">${(user.corps || '').toUpperCase() === 'GN' ? 'Gendarmerie Nationale' : (user.corps || '').toUpperCase() === 'PN' ? 'Police Nationale' : 'Police / Gendarmerie'}</p>
           ${pro.isActive ? '<span class="profile-pro-badge">⭐ Abonné PRO</span>' : ''}
           ${daysLeft !== null ? `<p class="profile-exam-days ${daysLeft < 30 ? 'profile-exam-urgent' : ''}">📅 Examen dans ${daysLeft} jour${daysLeft > 1 ? 's' : ''}</p>` : ''}
         </div>

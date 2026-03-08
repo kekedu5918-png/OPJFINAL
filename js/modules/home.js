@@ -138,7 +138,7 @@ function getTodayProgress() {
 }
 
 /**
- * Rendu du header sticky.
+ * Rendu du header home (compact, pas de duplication avec l'app-header global).
  * @returns {string}
  */
 function renderHeader() {
@@ -146,73 +146,114 @@ function renderHeader() {
   const grade = window.AppState.currentGrade();
   const pulseClass = streak > 7 ? 'home-streak-pulse' : '';
   const streakColor = streak > 0 ? '' : 'home-streak-zero';
+  const user = window.AppState.getState('user') || {};
+  const prenom = (user.name || '').trim().split(/\s+/)[0] || 'Agent';
   return `
-    <header class="home-header">
-      <button type="button" class="home-logo-btn" data-route="home" aria-label="Accueil">
-        <img src="assets/icons/icon-192.png" alt="OPJ Examen" class="home-logo-img">
-      </button>
-      <span class="home-streak ${pulseClass} ${streakColor}">🔥 ${streak}</span>
-      <button type="button" class="home-grade-badge" aria-label="Profil" data-route="profile" style="background-color: ${grade?.color || 'var(--c-border)'};"></button>
-    </header>
+    <div class="home-header">
+      <div class="home-header-left">
+        <p class="home-header-greeting">${getGreeting(prenom)}</p>
+        <p class="home-header-grade" style="color:${grade?.color || 'var(--c-gold)'}">${grade?.name || 'Gardien Élève'}</p>
+      </div>
+      <div class="home-header-right">
+        <span class="home-streak ${pulseClass} ${streakColor}" title="Série de jours">🔥 ${streak}</span>
+        <button type="button" class="home-grade-badge" aria-label="Mon profil" data-route="profile" style="background: ${grade?.color || 'var(--c-border)'}22; border-color: ${grade?.color || 'var(--c-border)'}; color: ${grade?.color || 'var(--c-gold)'};">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+      </div>
+    </div>
   `;
 }
 
 /**
- * Rendu de la hero card.
- * @returns {string}
+ * Hero card — adapte son contenu selon la maturité de l'utilisateur.
  */
 function renderHeroCard() {
   const user = window.AppState.getState('user') || {};
   const prenom = (user.name || '').trim().split(/\s+/)[0] || '';
   const days = window.AppState.daysUntilExam();
   const totalScore = window.AppState.getTotalPredictedScore();
+  const totalSessions = window.AppState.getState('gamification.totalSessions') || 0;
   const scores = EPREUVES.map((e) => ({ ...e, score: window.AppState.getPredictedScore(e.id) }));
   const eliminableIndex = [1, 2, 3].find((n) => window.AppState.isEpreuveEliminable(`ep${n}`));
-  const greeting = getGreeting(prenom);
-  const countdownClass = getCountdownClass(days);
   const ctaText = getSessionCtaText();
-  const pro = window.AppState.getState('pro') || {};
-  const isPro = pro.isActive === true;
+  const countdownClass = getCountdownClass(days);
 
-  let countdownBlock = '';
-  if (days != null) {
-    countdownBlock = `
-      <div class="home-countdown-wrap">
-        <span class="home-countdown-num ${countdownClass}">${days}</span>
-        <span class="home-countdown-label">JOURS AVANT L'EXAMEN</span>
+  // Mode débutant (< 5 sessions) → message d'accueil et calibration
+  if (totalSessions < 5) {
+    const steps = [
+      { done: totalSessions >= 1, label: 'Première session QCM' },
+      { done: (window.AppState.getState('progress.lessons.completed') || []).length >= 1, label: 'Première leçon lue' },
+      { done: totalSessions >= 3, label: '3 sessions pour calibrer' },
+      { done: totalSessions >= 5, label: 'Score prévisionnel activé' }
+    ];
+    const doneCount = steps.filter(s => s.done).length;
+    return `
+      <div class="home-hero card home-hero-onboarding">
+        <div class="home-hero-onb-top">
+          <p class="home-hero-onb-welcome">Bienvenue ${prenom ? `, ${prenom}` : ''} 👋</p>
+          <p class="home-hero-onb-sub">Commence par ces 4 étapes pour calibrer ton niveau</p>
+        </div>
+        <div class="home-onb-steps">
+          ${steps.map(s => `
+            <div class="home-onb-step ${s.done ? 'home-onb-step-done' : ''}">
+              <span class="home-onb-step-check">${s.done ? '✓' : '○'}</span>
+              <span class="home-onb-step-label">${s.label}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div class="home-onb-progress-bar">
+          <div class="home-onb-progress-fill" style="width:${(doneCount / 4) * 100}%"></div>
+        </div>
+        <p class="home-onb-progress-txt">${doneCount}/4 complétées</p>
+        <button type="button" class="btn btn-primary btn-lg btn-full" data-route="train">
+          ${totalSessions === 0 ? '🚀 Lancer ma première session' : '▶ Continuer ma préparation'}
+        </button>
+        ${days !== null && days >= 0 ? `<p class="home-onb-days">📅 Examen dans <strong>${days} jours</strong></p>` : `<button type="button" class="btn btn-ghost btn-sm" data-set-exam-date="">📅 Définir ma date d'examen</button>`}
       </div>
     `;
-  } else {
-    countdownBlock = `<button type="button" class="btn btn-ghost btn-md" data-route="train" data-set-exam="">📅 Définir ma date d'examen</button>`;
   }
+
+  // Mode avancé → scores et progression
+  let countdownBlock = days !== null && days >= 0
+    ? `<div class="home-countdown-wrap"><span class="home-countdown-num ${countdownClass}">${days}</span><span class="home-countdown-label">JOURS</span></div>`
+    : `<button type="button" class="btn btn-ghost btn-sm" data-set-exam-date="">📅 Date d'examen</button>`;
 
   const pastilles = scores.map((s) => {
     const cl = getScoreClass(s.score);
     const disp = s.score != null ? s.score.toFixed(1) : '—';
     const warn = s.score != null && s.score <= 5 ? ' ⚠️' : '';
-    return `<div class="home-pastille"><span class="home-pastille-label">${s.label}</span><span class="home-score mono ${cl}">${disp}${warn}</span></div>`;
+    return `<div class="home-pastille"><span class="home-pastille-label">${s.short}</span><span class="home-score mono ${cl}">${disp}${warn}</span></div>`;
   }).join('');
 
   const alertBanner = eliminableIndex ? `
     <div class="home-alert-eliminable">
-      <span>🚨 Épreuve ${eliminableIndex} en zone éliminatoire (≤ 5/20). Révise maintenant.</span>
+      <span>🚨 EP${eliminableIndex} zone éliminatoire ≤ 5/20</span>
       <button type="button" class="btn btn-ghost btn-sm" data-route="train">Réviser →</button>
     </div>
   ` : '';
 
-  const totalDisp = totalScore != null ? totalScore : '—';
-  const totalPct = totalScore != null ? Math.min(100, (totalScore / 120) * 100) : 0;
+  const totalDisp = totalScore != null ? Math.round(totalScore) : '—';
+  const totalPct = totalScore != null ? Math.min(100, (totalScore / (window.AppState.getState('progress.ep3.simulations')?.length >= 5 ? 120 : 100)) * 100) : 0;
+  const totalLabel = totalScore != null
+    ? (window.AppState.getState('progress.ep3.simulations')?.length >= 5 ? `${totalDisp}/120` : `${totalDisp}/100 (EP1+EP2)`)
+    : '—';
 
   return `
     <div class="home-hero card">
-      <p class="home-greeting">${greeting}</p>
-      <div class="home-countdown-block">${countdownBlock}</div>
-      <div class="home-pastilles">${pastilles}</div>
+      <div class="home-hero-top">
+        <div class="home-pastilles">${pastilles}</div>
+        ${countdownBlock}
+      </div>
       ${alertBanner}
       <div class="home-total-wrap">
-        <span class="home-total-label">Score projeté : <span class="mono">${totalDisp}</span>/120</span>
-        <div class="progress-bar home-total-bar"><div class="progress-fill" style="width: ${totalPct}%;"></div></div>
-        <span class="home-total-seuil">Seuil d'admission : 60/120</span>
+        <div class="home-total-row">
+          <span class="home-total-label">Score projeté</span>
+          <span class="mono home-total-val ${totalScore !== null && totalScore >= 60 ? 'home-total-pass' : totalScore !== null ? 'home-total-fail' : ''}">${totalLabel}</span>
+        </div>
+        <div class="progress-bar home-total-bar">
+          <div class="progress-fill ${totalScore !== null && totalScore >= 60 ? 'home-total-bar-pass' : ''}" style="width:${totalPct}%"></div>
+        </div>
+        <span class="home-total-seuil">Admission : 60/120 · Coeff. EP1×2 + EP2×3 + EP3×1</span>
       </div>
       <button type="button" class="btn btn-primary btn-lg btn-full home-cta-session" data-route="train">
         <svg class="home-cta-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
@@ -228,23 +269,28 @@ function renderHeroCard() {
  */
 function renderQuickStats() {
   const weeklyXp = window.AppState.getState('gamification.weeklyXP') ?? 0;
+  const totalSessions = window.AppState.getState('gamification.totalSessions') ?? 0;
   const globalPct = getGlobalMasteryPct();
-  const ranking = '—';
+  const lessons = (window.AppState.getState('progress.lessons.completed') || []).length;
 
   return `
     <div class="home-quick-stats">
-      <div class="home-quick-stat card card-interactive">
-        <span class="home-quick-stat-label">XP cette semaine</span>
-        <span class="home-quick-stat-value mono">${weeklyXp}</span>
+      <div class="home-quick-stat card" data-route="diagnostic">
+        <span class="home-quick-stat-label">XP semaine</span>
+        <span class="home-quick-stat-value mono" style="color:var(--c-gold)">${weeklyXp.toLocaleString()}</span>
       </div>
-      <div class="home-quick-stat card card-interactive">
-        <span class="home-quick-stat-label">Maîtrise globale</span>
+      <div class="home-quick-stat card" data-route="diagnostic">
+        <span class="home-quick-stat-label">Maîtrise</span>
         <span class="home-quick-stat-value mono">${globalPct}%</span>
         <div class="progress-bar home-quick-progress"><div class="progress-fill" style="width: ${globalPct}%;"></div></div>
       </div>
-      <div class="home-quick-stat card card-interactive">
-        <span class="home-quick-stat-label">Classement</span>
-        <span class="home-quick-stat-value mono">${ranking}</span>
+      <div class="home-quick-stat card" data-route="profile">
+        <span class="home-quick-stat-label">Sessions</span>
+        <span class="home-quick-stat-value mono">${totalSessions}</span>
+      </div>
+      <div class="home-quick-stat card" data-route="learn">
+        <span class="home-quick-stat-label">Leçons</span>
+        <span class="home-quick-stat-value mono" style="color:var(--c-ep2)">${lessons}</span>
       </div>
     </div>
   `;
@@ -260,29 +306,31 @@ function renderTodaySection() {
   const lesson = getRecommendedLesson();
   const pro = window.AppState.getState('pro') || {};
   const isPro = pro.isActive === true;
-  const lockQcm = !isPro;
-  const lockFlash = !isPro;
-  const lockLesson = !isPro;
+  // QCM EP2 gratuit : accessible jusqu'à 3 sessions/jour (plan freemium)
+  const canQcm = window.Paywall?.canAccessQcmSession?.() !== false;
+  const lockFlash = false; // Flashcards accessibles en gratuit (DPG/DPS verrouillés dedans)
+  const lockLesson = false; // Leçons accessibles en gratuit (contenu PRO verrouillé dedans)
 
   const qcmProgress = goal > 0 ? Math.min(100, (done / goal) * 100) : 0;
   const flashDisabled = dueCards === 0;
+  const sessionsLeft = canQcm ? (3 - (window.Paywall?.getQcmSessionsToday?.() ?? 0)) : 0;
+  const qcmLabel = isPro ? `${goal} questions` : `${Math.max(0, sessionsLeft)} session${sessionsLeft !== 1 ? 's' : ''} restante${sessionsLeft !== 1 ? 's' : ''}`;
 
   return `
     <section class="home-section">
       <h2 class="home-section-title">Ta session du jour</h2>
       <div class="home-today-cards">
-        <div class="home-today-card card card-interactive ${lockQcm ? 'home-card-locked' : ''}" data-route="train">
-          ${lockQcm ? '<span class="home-card-lock" aria-hidden="true">🔒</span>' : ''}
-          <span class="badge badge-ep1">EP1</span>
-          <span class="home-today-card-main">${goal} questions</span>
+        <div class="home-today-card card card-interactive ${!canQcm ? 'home-card-locked' : ''}" data-route="train">
+          ${!canQcm ? '<span class="home-card-lock" aria-hidden="true">🔒</span>' : ''}
+          <span class="badge badge-ep2">QCM</span>
+          <span class="home-today-card-main">${qcmLabel}</span>
           <div class="progress-bar"><div class="progress-fill" style="width: ${qcmProgress}%;"></div></div>
         </div>
-        <div class="home-today-card card card-interactive ${flashDisabled ? 'home-today-card-disabled' : ''} ${lockFlash ? 'home-card-locked' : ''}" data-route="infractions">
-          ${lockFlash ? '<span class="home-card-lock" aria-hidden="true">🔒</span>' : ''}
-          <span class="home-today-card-main">🧠 ${dueCards} cartes à revoir</span>
+        <div class="home-today-card card card-interactive ${flashDisabled ? 'home-today-card-disabled' : ''}" data-route="flashcards">
+          <span class="home-today-card-main">🃏 ${dueCards > 0 ? `${dueCards} cartes dues` : 'Flashcards à jour ✓'}</span>
+          <span class="home-today-card-meta">Répétition espacée</span>
         </div>
-        <div class="home-today-card card card-interactive ${lockLesson ? 'home-card-locked' : ''}" data-route="learn">
-          ${lockLesson ? '<span class="home-card-lock" aria-hidden="true">🔒</span>' : ''}
+        <div class="home-today-card card card-interactive" data-route="learn">
           <span class="home-today-card-main">${lesson.title}</span>
           <span class="home-today-card-meta">${lesson.duration}</span>
         </div>
@@ -367,16 +415,117 @@ function renderEpreuvesSection() {
 }
 
 /**
+ * Plan de révision personnalisé basé sur la date d'examen et les lacunes.
+ */
+function renderRevisionPlan() {
+  const days = window.AppState.daysUntilExam();
+  const ep1Score = window.AppState.getPredictedScore('ep1');
+  const ep2Score = window.AppState.getPredictedScore('ep2');
+  const ep3Score = window.AppState.getPredictedScore('ep3');
+  const lessonsCompleted = (window.AppState.getState('progress.lessons.completed') || []).length;
+  const totalSessions = window.AppState.getState('gamification.totalSessions') || 0;
+  const goal = window.AppState.getState('user.dailyGoal') || 15;
+  const { done } = getTodayProgress();
+  const todayDone = done >= goal;
+
+  // Génère les tâches du jour selon le niveau
+  const tasks = [];
+
+  if (!todayDone) {
+    tasks.push({ icon: '🎯', label: `Session QCM (${goal} questions)`, done: false, route: 'train', urgent: ep2Score !== null && ep2Score < 10 });
+  } else {
+    tasks.push({ icon: '✅', label: `Session du jour complétée (${done}/${goal} questions)`, done: true, route: 'train', urgent: false });
+  }
+
+  if (lessonsCompleted < 3) {
+    tasks.push({ icon: '📖', label: 'Lire une leçon de cours', done: false, route: 'learn', urgent: false });
+  }
+
+  if (ep2Score === null || ep2Score < 12) {
+    tasks.push({ icon: '⚖️', label: 'EP2 Procédure Pénale — 5 questions', done: false, route: 'train', urgent: ep2Score !== null && ep2Score < 7 });
+  }
+
+  if (days !== null && days < 30) {
+    tasks.push({ icon: '🏋️', label: 'Mode Examen — simulation conditions réelles', done: false, route: 'exam', urgent: true });
+  }
+
+  const dueCards = getDueFlashcardsCount();
+  if (dueCards > 0) {
+    tasks.push({ icon: '🃏', label: `${dueCards} flashcard${dueCards > 1 ? 's' : ''} à réviser`, done: false, route: 'flashcards', urgent: false });
+  }
+
+  if (ep3Score === null && totalSessions >= 5) {
+    tasks.push({ icon: '🎤', label: 'Simuler un compte rendu EP3', done: false, route: 'compte-rendu', urgent: false });
+  }
+
+  // Message motivationnel selon le contexte
+  let motivation = '';
+  if (days !== null && days <= 7) motivation = '⚡ Dernière semaine — chaque session compte.';
+  else if (days !== null && days <= 30) motivation = '🎯 Moins d\'un mois. Intensifie le rythme.';
+  else if (ep1Score !== null && ep2Score !== null && ep1Score >= 14 && ep2Score >= 14) motivation = '🏆 Excellent niveau — maintiens la cadence.';
+  else if (ep2Score !== null && ep2Score < 7) motivation = '🚨 EP2 en zone critique — priorité absolue.';
+
+  if (tasks.length === 0) return '';
+
+  return `
+    <section class="home-section">
+      <h2 class="home-section-title">📋 Plan du jour</h2>
+      ${motivation ? `<p class="home-plan-motivation">${motivation}</p>` : ''}
+      <div class="home-plan-tasks">
+        ${tasks.slice(0, 5).map(t => `
+          <button type="button" class="home-plan-task ${t.done ? 'home-plan-task-done' : ''} ${t.urgent ? 'home-plan-task-urgent' : ''}" data-route="${t.route}">
+            <span class="home-plan-task-icon">${t.icon}</span>
+            <span class="home-plan-task-label">${t.label}</span>
+            ${t.urgent ? '<span class="home-plan-urgent-badge">URGENT</span>' : ''}
+            ${t.done ? '<span class="home-plan-done-check">✓</span>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>'}
+          </button>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+/**
+ * Section Actualités juridiques.
+ */
+function renderActusSection() {
+  const actus = (window.ACTUS_JURIDIQUES || []).slice(0, 3);
+  if (!actus.length) return '';
+  return `
+    <section class="home-section">
+      <div class="home-section-header">
+        <h2 class="home-section-title">📰 Réformes récentes</h2>
+        <button type="button" class="btn btn-ghost btn-sm" data-route="actus">Tout voir</button>
+      </div>
+      <div class="home-actus">
+        ${actus.map(a => `
+          <div class="home-actu-card card" data-route="actus" data-actu-id="${a.id}">
+            <div class="home-actu-top">
+              <span class="home-actu-tag" style="background:${a.tagColor}22;color:${a.tagColor};border-color:${a.tagColor}44">${a.tag}</span>
+              <span class="home-actu-date">${new Date(a.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short' })}</span>
+            </div>
+            <p class="home-actu-titre">${a.titre}</p>
+            <p class="home-actu-impact">Impact examen : ${a.impactExamen.slice(0, 80)}…</p>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+/**
  * Rendu section "Outils complémentaires".
  */
 function renderToolsSection() {
   const tools = [
-    { route: 'flashcards', icon: '🃏', label: 'Flashcards', desc: 'Répétition espacée SM-2' },
+    { route: 'exam', icon: '🏋️', label: 'Mode Examen', desc: 'Conditions réelles' },
+    { route: 'flashcards', icon: '🃏', label: 'Flashcards', desc: 'Répétition espacée' },
     { route: 'cas-pratique', icon: '✍️', label: 'Cas pratiques', desc: 'Entraînement écrit' },
-    { route: 'diagnostic', icon: '📊', label: 'Diagnostic', desc: 'Analyse de tes résultats' },
-    { route: 'infractions', icon: '🔍', label: 'Infractions', desc: '42 infractions détaillées' },
-    { route: 'cartouches', icon: '📋', label: 'Cartouches', desc: 'Procédures en actes' },
-    { route: 'compte-rendu', icon: '📝', label: 'Comptes rendus', desc: 'Simulation EP3' }
+    { route: 'diagnostic', icon: '📊', label: 'Diagnostic', desc: 'Tes résultats' },
+    { route: 'infractions', icon: '⚖️', label: 'Infractions', desc: '42 infractions' },
+    { route: 'cartouches', icon: '📋', label: 'Cartouches', desc: 'Procédures' },
+    { route: 'compte-rendu', icon: '📝', label: 'Comptes rendus', desc: 'Simulation EP3' },
+    { route: 'actus', icon: '📰', label: 'Actualités', desc: 'Réformes récentes' }
   ];
   return `
     <section class="home-section home-tools-section">
@@ -405,8 +554,10 @@ function render(container) {
       <div class="home-scroll">
         ${renderHeroCard()}
         ${renderQuickStats()}
+        ${renderRevisionPlan()}
         ${renderTodaySection()}
         ${renderEpreuvesSection()}
+        ${renderActusSection()}
         ${renderToolsSection()}
       </div>
     </div>
@@ -418,5 +569,47 @@ function render(container) {
       if (route) window.Router.navigate(`#${route}`);
     });
   });
+
+  // Bouton "Définir ma date d'examen" → modal date picker inline
+  container.querySelector('[data-set-exam-date]')?.addEventListener('click', () => {
+    showExamDatePicker(container);
+  });
 }
+
+/**
+ * Mini modal pour définir la date d'examen sans quitter l'écran.
+ */
+function showExamDatePicker(container) {
+  const today = new Date().toISOString().slice(0, 10);
+  const existing = document.getElementById('exam-date-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'exam-date-modal';
+  modal.className = 'exam-date-modal';
+  modal.innerHTML = `
+    <div class="exam-date-modal-inner">
+      <h3 class="exam-date-modal-title">📅 Date de l'examen</h3>
+      <p class="exam-date-modal-sub">Saisir ta date pour activer le compte à rebours</p>
+      <input type="date" id="exam-date-input" class="exam-date-input" min="${today}" value="">
+      <div class="exam-date-actions">
+        <button type="button" class="btn btn-primary btn-full" id="exam-date-confirm">Confirmer</button>
+        <button type="button" class="btn btn-ghost btn-full" id="exam-date-cancel">Annuler</button>
+      </div>
+      <p class="exam-date-tip">Examen PN : 20 mai 2026 · GN : dernier trimestre 2026</p>
+    </div>
+  `;
+  document.getElementById('modal-container')?.appendChild(modal);
+  requestAnimationFrame(() => modal.classList.add('exam-date-modal-visible'));
+
+  modal.querySelector('#exam-date-confirm')?.addEventListener('click', () => {
+    const val = modal.querySelector('#exam-date-input')?.value;
+    if (val) {
+      window.AppState.dispatch('UPDATE_USER', { examDate: val });
+      modal.remove();
+      window.Home.render(container);
+    }
+  });
+  modal.querySelector('#exam-date-cancel')?.addEventListener('click', () => modal.remove());
+}
+
 window.Home = { render };

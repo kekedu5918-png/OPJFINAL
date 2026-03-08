@@ -6,16 +6,16 @@
 const MODAL_CONTAINER_ID = 'modal-container';
 const TOAST_CONTAINER_ID = 'toast-container';
 
-/** Limites gratuites */
+/** Limites gratuites — alignées avec la landing page */
 const LIMITS = {
-  qcmSessionsToday: 3,
-  lessonsAvailable: ['flagrance', 'gav'],
-  ep1Locked: true,
-  infractionsMax: 10,
-  cartouchesMax: 3,
-  compteRenduMax: 2,
-  flashcardsPerDay: 10,
-  explanationsLocked: false
+  qcmSessionsToday: 3,       // 3 sessions de 10 QCM par jour
+  lessonsAvailable: ['dpg-1', 'pp-1', 'dps-1'], // 1 leçon gratuite par module
+  ep1Locked: true,            // EP1 (DPG+DPS) = PRO uniquement
+  infractionsMax: 10,         // 10 infractions sur 42 en gratuit
+  cartouchesMax: 3,           // 3 cartouches sur 8 en gratuit
+  compteRenduMax: 2,          // 2 simulations sur 7 en gratuit
+  flashcardsPerDay: 15,       // 15 flashcards par jour en gratuit
+  explanationsLocked: true    // Explications après QCM = PRO (aligné avec la landing)
 };
 
 function getToday() {
@@ -99,7 +99,7 @@ function canAccessCompteRendu() {
 function getFlashcardsUsedToday() {
   const sm2 = window.AppState.getState('progress.infractions.sm2') || {};
   const today = getToday();
-  return Object.values(sm2).filter((v) => v && v.due === today).length;
+  return Object.values(sm2).filter((v) => v && v.due <= today).length;
 }
 function canAccessFlashcards() {
   if (isPro()) return true;
