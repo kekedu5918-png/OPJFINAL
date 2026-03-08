@@ -103,6 +103,13 @@ function registerRoutes() {
   router.register('infractions', function(container) { window.Infractions.render(container); });
   router.register('cartouches', function(container, params) { window.Cartouches.render(container, params); });
   router.register('compte-rendu', function(container, params) { window.CompteRendu.render(container, params); });
+  router.register('learn', function(container, params) { window.Lessons.render(container, params); });
+  router.register('lesson', function(container, params) { window.Lessons.render(container, params); });
+  router.register('flashcards', function(container) { window.Flashcards.render(container); });
+  router.register('cas-pratique', function(container) { window.CasePratique.render(container); });
+  router.register('diagnostic', function(container) { window.Diagnostic.render(container); });
+  router.register('profile', function(container) { window.Gamification.render(container); });
+  router.register('pro', function(container) { window.Paywall.showProScreen ? window.Paywall.showProScreen(container) : window.Paywall.showModal(container); });
   router.register('*', function(container, _params) {
     var name = router.getCurrentRoute().name;
     container.innerHTML = `<div class="screen-placeholder" style="padding: var(--s-8);"><p>Écran « ${name} »</p></div>`;
@@ -206,6 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     // Initialise le state, le router, les routes
     initAppCore();
+
+    // Initialise les modules gamification (abonnements badges)
+    if (window.Gamification && window.Gamification.init) window.Gamification.init();
 
     // Lance le splash avec délai normal
     setTimeout(() => {

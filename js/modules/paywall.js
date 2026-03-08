@@ -450,5 +450,12 @@ window.Paywall = {
   openProModal,
   openTrialModal,
   checkAndShowTrialModal,
+  showModal: (container) => openProModal(typeof container === 'string' ? document.getElementById('modal-container') : (container || document.getElementById('modal-container'))),
+  showProScreen: (container) => {
+    if (container && container.innerHTML !== undefined) {
+      const mc = document.getElementById('modal-container') || container;
+      openProModal(mc);
+    }
+  },
   init
 };
