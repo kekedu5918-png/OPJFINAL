@@ -65,6 +65,84 @@ function showBadgeToast(badge) {
 }
 
 /**
+ * Génère le heatmap d'activité des 90 derniers jours.
+ */
+function buildHeatmap() {
+  const progress = window.AppState.getState('progress') || {};
+  const allDates = new Set();
+
+  const addDates = (sessions) => {
+    (sessions || []).forEach(s => {
+      const d = (s.date || s.submittedAt || '').slice(0, 10);
+      if (d) allDates.add(d);
+    });
+  };
+
+  addDates(progress.ep1?.dpg?.sessions);
+  addDates(progress.ep1?.dps?.sessions);
+  addDates(progress.ep2?.pp?.sessions);
+  addDates(progress.ep3?.simulations);
+  (progress.casePratiques?.submitted || []).forEach(s => {
+    const d = (s.submittedAt || '').slice(0, 10);
+    if (d) allDates.add(d);
+  });
+
+  const today = new Date();
+  const days = [];
+  for (let i = 89; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
+  }
+
+  const totalActive = days.filter(d => allDates.has(d)).length;
+  const weeks = [];
+  for (let i = 0; i < days.length; i += 7) {
+    weeks.push(days.slice(i, i + 7));
+  }
+
+  const monthLabels = [];
+  let lastMonth = -1;
+  weeks.forEach((week, wi) => {
+    const m = new Date(week[0]).getMonth();
+    if (m !== lastMonth) {
+      const name = new Date(week[0]).toLocaleDateString('fr-FR', { month: 'short' });
+      monthLabels.push({ wi, name });
+      lastMonth = m;
+    }
+  });
+
+  return `
+    <div class="heatmap-section">
+      <div class="heatmap-header">
+        <p class="heatmap-title">Activité — 90 derniers jours</p>
+        <p class="heatmap-count">${totalActive} jour${totalActive > 1 ? 's' : ''} actif${totalActive > 1 ? 's' : ''}</p>
+      </div>
+      <div class="heatmap-months">
+        ${monthLabels.map(m => `<span class="heatmap-month" style="grid-column:${m.wi + 1}">${m.name}</span>`).join('')}
+      </div>
+      <div class="heatmap-grid">
+        ${weeks.map(week => `
+          <div class="heatmap-week">
+            ${week.map(day => {
+              const active = allDates.has(day);
+              const isToday = day === today.toISOString().slice(0, 10);
+              return `<div class="heatmap-day ${active ? 'heatmap-active' : ''} ${isToday ? 'heatmap-today' : ''}" title="${day}"></div>`;
+            }).join('')}
+          </div>
+        `).join('')}
+      </div>
+      <div class="heatmap-legend">
+        <span>Moins</span>
+        <div class="heatmap-day heatmap-legend-day"></div>
+        <div class="heatmap-day heatmap-active heatmap-legend-day"></div>
+        <span>Plus</span>
+      </div>
+    </div>
+  `;
+}
+
+/**
  * Rendu du profil complet.
  */
 function renderProfile(container) {
@@ -159,6 +237,9 @@ function renderProfile(container) {
         </div>
       </div>
 
+      <!-- Heatmap activité -->
+      ${buildHeatmap()}
+
       <!-- Score prévisionnel -->
       ${totalScore !== null ? `
         <div class="profile-score-section">
@@ -210,10 +291,24 @@ function renderProfile(container) {
           </div>
         ` : `
           <div class="profile-free-plan">
-            <p>Tu es en mode Gratuit (3 sessions/jour).</p>
-            <button type="button" class="btn btn-primary btn-full profile-upgrade-btn" data-route="pro">
-              Passer PRO — Accès illimité
-            </button>
+            <div class="profile-trial-banner">
+              <div class="profile-trial-top">
+                <span class="profile-trial-badge">⭐ 7 JOURS GRATUITS</span>
+                <span class="profile-trial-price">puis 9,99€/mois</span>
+              </div>
+              <p class="profile-trial-title">Débloquer EP1 + explications illimitées</p>
+              <ul class="profile-trial-list">
+                <li>✓ 150 questions EP1 (DPG + DPS)</li>
+                <li>✓ Explications juridiques après chaque QCM</li>
+                <li>✓ Sessions QCM illimitées</li>
+                <li>✓ Mode Examen complet (EP1+EP2)</li>
+                <li>✓ Toutes les infractions, cartouches, comptes rendus</li>
+              </ul>
+              <button type="button" class="btn btn-primary btn-lg btn-full" data-route="pro">
+                Commencer l'essai gratuit →
+              </button>
+              <p class="profile-trial-note">Sans carte bancaire · Annulable à tout moment</p>
+            </div>
           </div>
         `}
       </div>

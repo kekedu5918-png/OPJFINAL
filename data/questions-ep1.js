@@ -2708,5 +2708,177 @@ window.QUESTIONS_EP1 = [
     article: "Art. 63 CPP",
     trap: null,
     isPro: false
+  },
+
+  /* ── ANNALES OFFICIELLES — EP1 ── */
+  {
+    id: "ep1_annale_001",
+    epreuve: 1, module: "EP1_DPG", difficulty: 2,
+    isAnnale: true,
+    question: "Lors d'une enquête préliminaire, un OPJ souhaite procéder à une perquisition au domicile d'un suspect qui refuse son assentiment. Pour une infraction punie de 7 ans d'emprisonnement, qui peut autoriser cette perquisition ?",
+    answers: [
+      "Le Juge des libertés et de la détention (JLD), saisi par le Procureur de la République",
+      "Le Procureur de la République directement, par voie de réquisition écrite",
+      "Le Juge d'instruction, même sans réquisitoire introductif",
+      "Aucune autorité — la perquisition est impossible sans assentiment en préliminaire"
+    ],
+    correct: 0,
+    explanation: "Art. 76 al. 4 CPP : en enquête préliminaire, si la personne refuse son assentiment et que l'infraction est punie d'au moins 5 ans, le PR peut saisir le JLD qui autorise la perquisition. L'OPJ ne peut pas agir seul. Le PR ne peut pas l'autoriser directement — seul le JLD dispose de cette compétence.",
+    article: "Art. 76 al. 4 CPP",
+    trap: "Le seuil est 5 ans (pas 3 ans). Et c'est le JLD qui autorise, pas le PR.",
+    isPro: false
+  },
+  {
+    id: "ep1_annale_002",
+    epreuve: 1, module: "EP1_DPS", difficulty: 2,
+    isAnnale: true,
+    question: "M. DURAND frappe violemment son voisin lors d'une dispute. La victime présente une fracture de la mâchoire. Le médecin constate une ITT de 45 jours. Quelle est la qualification correcte si M. DURAND a agi avec préméditation ?",
+    answers: [
+      "Violences volontaires ayant entraîné une ITT > 8 jours, avec préméditation — crime (art. 222-9 CP) passible de 10 ans",
+      "Violences volontaires ayant entraîné une ITT > 8 jours — délit (art. 222-11) passible de 3 ans",
+      "Coups et blessures volontaires — délit de droit commun passible de 5 ans",
+      "Tentative de meurtre — crime passible de 15 ans car l'acte était intentionnel"
+    ],
+    correct: 0,
+    explanation: "Art. 222-9 CP : des violences ayant entraîné une mutilation ou une infirmité permanente = crime 10 ans. Mais ici : ITT > 8 jours (art. 222-11, 3 ans) + préméditation comme circonstance aggravante → art. 222-12 CP → 5 ans. Avec préméditation ET ITT > 8 jours = 5 ans d'emprisonnement. L'ITT de 45j est > 8j → art. 222-11 aggravé par préméditation = 10 ans selon 222-12 al. 1. C'est une question piège classique des annales.",
+    article: "Art. 222-11 et 222-12 CP",
+    trap: "La préméditation sur des violences > 8j ITT porte la peine à 10 ans (crime). Ne pas confondre avec 222-9 (mutilation).",
+    isPro: false
+  },
+  {
+    id: "ep1_annale_003",
+    epreuve: 1, module: "EP1_DPG", difficulty: 3,
+    isAnnale: true,
+    question: "Un suspect placé en garde à vue demande à s'entretenir avec un avocat. L'OPJ lui annonce qu'il ne peut voir l'avocat que dans 24 heures, en invoquant la nature complexe de l'affaire. Cette décision est-elle légale et qui peut la prendre ?",
+    answers: [
+      "Oui, légale — mais la décision de différer appartient au Procureur de la République (pas à l'OPJ), pour une durée maximale de 24h en droit commun",
+      "Non, illégale — l'avocat doit toujours intervenir dès la 1re heure sans exception",
+      "Oui, légale — l'OPJ peut décider seul de différer l'accès à l'avocat selon les circonstances",
+      "Oui, légale — mais seul le Juge d'instruction peut autoriser ce différé en cours d'instruction"
+    ],
+    correct: 0,
+    explanation: "Art. 63-4-2 CPP : l'accès à l'avocat peut être différé sur décision du PROCUREUR DE LA REPUBLIQUE (et non de l'OPJ) pour des raisons impérieuses tenant aux circonstances de l'enquête, jusqu'à 24h en droit commun. En matière criminelle organisée, le JLD peut autoriser jusqu'à 48h. L'OPJ n'a pas ce pouvoir seul.",
+    article: "Art. 63-4-2 CPP",
+    trap: "C'est le PR qui décide, pas l'OPJ. L'OPJ ne peut pas différer l'avocat de sa propre initiative.",
+    isPro: false
+  },
+  {
+    id: "ep1_annale_004",
+    epreuve: 1, module: "EP1_DPG", difficulty: 2,
+    isAnnale: true,
+    question: "Quelle est la durée maximale de garde à vue pour un majeur soupçonné de trafic de stupéfiants en bande organisée (art. 706-73 CPP) ?",
+    answers: [
+      "96 heures (4 × 24h), avec prolongations autorisées par le JLD",
+      "48 heures (2 × 24h), prolongation autorisée par le PR",
+      "72 heures maximum, non renouvelable",
+      "144 heures, uniquement en cas de suspicion terroriste"
+    ],
+    correct: 0,
+    explanation: "Art. 706-88 CPP : régime dérogatoire pour les infractions de l'art. 706-73 (dont le trafic de stupéfiants en bande organisée) → GAV de 48h initiales + 2 prolongations de 24h chacune = 96h maximum. Chaque prolongation est autorisée par le JLD (ou le JI si information judiciaire ouverte). Les 144h s'appliquent au terrorisme (pas aux stupéfiants).",
+    article: "Art. 706-88 CPP",
+    trap: "96h pour stupéfiants BO. 144h pour terrorisme. Ne pas confondre les deux régimes.",
+    isPro: false
+  },
+  {
+    id: "ep1_annale_005",
+    epreuve: 1, module: "EP1_DPS", difficulty: 2,
+    isAnnale: true,
+    question: "Un jeune de 22 ans est surpris en train de vendre de la cocaïne à proximité d'une école. Quelle est la qualification correcte et quelle est la peine maximum applicable ?",
+    answers: [
+      "Cession illicite de stupéfiants aggravée (à proximité d'un établissement scolaire) — 10 ans + 7,5M€, portés à 15 ans + 10M€ si proximité d'établissement scolaire",
+      "Usage-revente de stupéfiants — simple délit passible de 5 ans + 375 000 €",
+      "Trafic de stupéfiants simple (art. 222-37) — 10 ans + 7,5M€ sans circonstance aggravante",
+      "Trafic de stupéfiants aggravé par la minorité du vendeur — 15 ans"
+    ],
+    correct: 0,
+    explanation: "Art. 222-37 CP : cession de stupéfiants = 10 ans + 7 500 000 €. Art. 222-48-1 CP : les circonstances aggravantes incluent la commission à proximité ou dans un établissement scolaire ou d'enseignement. La peine est alors portée au maximum de 15 ans + 10 000 000 €. Le vendeur est majeur (22 ans), pas de circonstance de minorité pour lui.",
+    article: "Art. 222-37 et 222-48-1 CP",
+    trap: "La proximité d'une école est une circonstance aggravante qui porte la peine de 10 à 15 ans. Ne pas oublier cette aggravante fréquemment testée.",
+    isPro: false
+  },
+  {
+    id: "ep1_annale_006",
+    epreuve: 1, module: "EP1_DPG", difficulty: 3,
+    isAnnale: true,
+    question: "Un OPJ reçoit une plainte pour abus de confiance. La victime affirme avoir remis 15 000 € à un ami en lui demandant de les placer en banque, mais l'ami les a utilisés pour payer ses dettes. Parmi les éléments suivants, lequel N'EST PAS constitutif de l'abus de confiance ?",
+    answers: [
+      "Le fait que la victime ait été trompée avant de remettre la somme",
+      "La remise volontaire des 15 000 € à titre précaire",
+      "Le détournement des fonds par l'auteur",
+      "Le préjudice subi par la victime"
+    ],
+    correct: 0,
+    explanation: "L'abus de confiance (art. 314-1 CP) suppose : une REMISE volontaire (à titre précaire), un DÉTOURNEMENT, et un PRÉJUDICE. La tromperie AVANT la remise est l'élément distinctif de l'ESCROQUERIE (art. 313-1 CP), pas de l'abus de confiance. Dans l'abus de confiance, la victime remet librement, sans être trompée au préalable — le détournement survient APRÈS. La tromperie préalable caractérise l'escroquerie.",
+    article: "Art. 314-1 CP (abus de confiance) vs 313-1 CP (escroquerie)",
+    trap: "La tromperie AVANT la remise = escroquerie. La remise libre puis détournement = abus de confiance. Distinction fondamentale aux annales.",
+    isPro: false
+  },
+  {
+    id: "ep1_annale_007",
+    epreuve: 1, module: "EP1_DPG", difficulty: 2,
+    isAnnale: true,
+    question: "En matière de flagrance, dans quel cas l'enquête de flagrance peut-elle être ouverte pour un crime ou délit découvert APRÈS la commission des faits ?",
+    answers: [
+      "Quand, dans un temps très voisin de l'action, la personne est trouvée en possession d'objets ou présente des traces laissant penser qu'elle est auteur ou complice",
+      "Uniquement quand les faits se sont produits dans les 48 dernières heures",
+      "Quand la victime identifie formellement l'auteur présumé peu après les faits",
+      "Quand une caméra de surveillance a filmé l'auteur au moment des faits"
+    ],
+    correct: 0,
+    explanation: "Art. 53 CPP : est assimilé à un crime ou délit flagrant, le cas 'où dans un temps très voisin de l'action, la personne soupçonnée est trouvée en possession d'objets, ou présente des traces ou indices, laissant penser qu'elle a participé au crime ou au délit'. Cette définition est celle du 'quasi-flagrant délit'. La simple identification par caméra ne suffit pas.",
+    article: "Art. 53 CPP",
+    trap: "La flagrance ne dépend pas d'un délai horaire précis mais de la notion de 'temps très voisin'. Une plainte 48h après ne permet pas la flagrance.",
+    isPro: false
+  },
+  {
+    id: "ep1_annale_008",
+    epreuve: 1, module: "EP1_DPS", difficulty: 3,
+    isAnnale: true,
+    question: "M. BERNARD conduit en état d'ivresse (1,8 g/L). Il renverse et tue accidentellement un piéton. Quelle est la qualification pénale exacte ?",
+    answers: [
+      "Homicide involontaire aggravé par la conduite sous l'empire d'un état alcoolique — art. 221-6 al. 2 CP — 7 ans + 100 000 €",
+      "Homicide volontaire avec dol éventuel — 30 ans de réclusion criminelle",
+      "Homicide involontaire simple — art. 221-6 al. 1 CP — 3 ans + 45 000 €",
+      "Meurtre aggravé par vulnérabilité de la victime — 30 ans + perpétuité"
+    ],
+    correct: 0,
+    explanation: "Art. 221-6 al. 2 CP : l'homicide involontaire commis par un conducteur en état alcoolique (≥ 0,5 g/L) est aggravé. Peine : 7 ans + 100 000 €. Ce n'est pas un meurtre (qui requiert l'intention de donner la mort). Ce n'est pas un homicide simple (qui serait 3 ans sans alcool). Le taux de 1,8 g/L caractérise clairement l'état alcoolique.",
+    article: "Art. 221-6 al. 2 CP",
+    trap: "L'homicide involontaire aggravé par alcool = 7 ans (pas 3 ans du simple, pas perpétuité du meurtre). Très fréquent aux annales.",
+    isPro: false
+  },
+  {
+    id: "ep1_annale_009",
+    epreuve: 1, module: "EP1_DPG", difficulty: 2,
+    isAnnale: true,
+    question: "Lors d'une enquête sur un vol aggravé, l'OPJ souhaite procéder à des réquisitions téléphoniques pour obtenir les données de localisation en temps réel du téléphone du suspect. Qui peut autoriser cette mesure en enquête préliminaire ?",
+    answers: [
+      "Le Juge des libertés et de la détention (JLD), saisi par le Procureur de la République",
+      "Le Procureur de la République, directement par voie de réquisitions",
+      "L'OPJ peut y procéder de sa propre initiative (réquisition directe)",
+      "Le Juge d'instruction, même en l'absence d'information judiciaire"
+    ],
+    correct: 0,
+    explanation: "Art. 230-32 et s. CPP : la géolocalisation en temps réel (tracking GPS d'un appareil) est une mesure intrusive qui nécessite, en enquête préliminaire, l'autorisation du JLD sur requête du Parquet. Distinction : données historiques d'identification = réquisition directe (art. 60-1). Géolocalisation temps réel = JLD obligatoire. En enquête de flagrance : le PR peut autoriser pour 15 jours.",
+    article: "Art. 230-32 CPP",
+    trap: "Données d'identification (passées) = réquisition directe. Géolocalisation en temps réel = JLD. Ne pas confondre.",
+    isPro: false
+  },
+  {
+    id: "ep1_annale_010",
+    epreuve: 1, module: "EP1_DPS", difficulty: 2,
+    isAnnale: true,
+    question: "Dans la définition du viol (art. 222-23 CP), quel est l'élément distinctif par rapport à une agression sexuelle ?",
+    answers: [
+      "Le viol inclut tout acte de pénétration sexuelle (y compris buccale et anale) ET les actes bucco-génitaux imposés ; l'agression sexuelle est tout autre acte sexuel",
+      "Le viol nécessite obligatoirement une violence physique ; l'agression sexuelle peut se commettre par surprise uniquement",
+      "Le viol est toujours un crime ; l'agression sexuelle peut être un délit ou un crime selon les circonstances",
+      "Le viol est réservé aux victimes majeures ; l'agression sexuelle couvre aussi les mineurs"
+    ],
+    correct: 0,
+    explanation: "Art. 222-23 CP (viol) : 'tout acte de pénétration sexuelle, de quelque nature qu'il soit, ou tout acte bucco-génital commis sur la personne d'autrui ou sur la personne de l'auteur par violence, contrainte, menace ou surprise'. Art. 222-27 (agression sexuelle) : 'toute autre atteinte sexuelle commise avec violence, contrainte, menace ou surprise'. Le critère distinctif est la NATURE DE L'ACTE (pénétration/bucco-génital), pas la violence. Les deux peuvent être commis par VCMS.",
+    article: "Art. 222-23 et 222-27 CP",
+    trap: "Les deux infractions peuvent être commises par Violence, Contrainte, Menace ou Surprise (VCMS). Le critère n'est pas la nature de la violence mais la nature de l'acte.",
+    isPro: false
   }
 ];

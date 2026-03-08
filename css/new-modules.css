@@ -973,3 +973,121 @@
 .qcm-quit-title { font-family: 'Syne', sans-serif; font-size: var(--fs-lg); font-weight: 800; color: var(--c-text-primary); margin-bottom: var(--s-1); text-align: center; }
 .qcm-quit-sub { font-size: var(--fs-sm); color: var(--c-text-muted); text-align: center; margin-bottom: var(--s-5); }
 .qcm-quit-actions { display: flex; flex-direction: column; gap: var(--s-2); }
+
+/* ═══════════════════════════════════════════════════════
+   QCM — Résultats par thème
+═══════════════════════════════════════════════════════ */
+.qcm-result-themes {
+  background: var(--c-bg-raised);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  padding: var(--s-4);
+  margin: var(--s-3) 0;
+}
+.qcm-result-themes-title {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--c-text-primary);
+  margin-bottom: var(--s-3);
+}
+.qcm-theme-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-2);
+}
+.qcm-theme-label { font-size: var(--fs-xs); color: var(--c-text-muted); width: 100px; flex-shrink: 0; }
+.qcm-theme-bar-wrap { flex: 1; height: 6px; background: var(--c-bg-overlay); border-radius: 3px; overflow: hidden; }
+.qcm-theme-bar { height: 100%; border-radius: 3px; transition: width 0.5s var(--ease-smooth); }
+.qcm-theme-score { font-size: var(--fs-xs); font-weight: 700; flex-shrink: 0; width: 36px; text-align: right; }
+
+.qcm-result-perfect { text-align: center; padding: var(--s-4); font-size: var(--fs-xl); }
+
+/* Accordion enrichi */
+.qcm-accordion-q { display: block; font-size: var(--fs-xs); text-align: left; line-height: 1.4; }
+.qcm-accordion-correct { font-size: var(--fs-xs); color: var(--c-success); margin-bottom: var(--s-1); }
+.qcm-accordion-expl { font-size: var(--fs-xs); color: var(--c-text-muted); line-height: 1.6; margin-bottom: var(--s-1); }
+.qcm-accordion-article { display: inline-block; font-size: 10px; background: var(--c-gold-subtle); border: 1px solid rgba(245,166,35,0.2); color: var(--c-gold); padding: 2px 6px; border-radius: 99px; margin-right: var(--s-1); }
+.qcm-accordion-trap { font-size: var(--fs-xs); color: var(--c-warning); background: rgba(251,191,36,0.07); padding: var(--s-2); border-radius: var(--r-sm); }
+
+/* QCM — Badge annales */
+.qcm-filter-annale { border-color: rgba(245,166,35,0.4) !important; background: var(--c-gold-subtle) !important; color: var(--c-gold) !important; }
+
+/* ═══════════════════════════════════════════════════════
+   QCM — Upgrade banner dans les résultats
+═══════════════════════════════════════════════════════ */
+.qcm-upgrade-banner {
+  background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(96,165,250,0.1));
+  border: 1px solid rgba(167,139,250,0.3);
+  border-radius: var(--r-lg);
+  padding: var(--s-4);
+  margin: var(--s-3) 0;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.qcm-upgrade-banner:hover { border-color: rgba(167,139,250,0.6); }
+.qcm-upgrade-inner { display: flex; align-items: center; gap: var(--s-3); }
+.qcm-upgrade-icon { font-size: 28px; flex-shrink: 0; }
+.qcm-upgrade-title { font-size: var(--fs-sm); font-weight: 700; color: var(--c-text-primary); margin-bottom: 2px; }
+.qcm-upgrade-sub { font-size: var(--fs-xs); color: var(--c-text-muted); }
+.qcm-upgrade-arrow { font-size: var(--fs-xl); color: var(--c-ep1); margin-left: auto; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════
+   PROFIL — Heatmap d'activité
+═══════════════════════════════════════════════════════ */
+.heatmap-section {
+  background: var(--c-bg-raised);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  padding: var(--s-4);
+}
+.heatmap-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--s-3); }
+.heatmap-title { font-family: 'Syne', sans-serif; font-size: var(--fs-sm); font-weight: 700; color: var(--c-text-primary); }
+.heatmap-count { font-size: var(--fs-xs); color: var(--c-gold); }
+.heatmap-months { display: flex; gap: 0; margin-bottom: 4px; overflow: hidden; }
+.heatmap-month { font-size: 9px; color: var(--c-text-muted); flex: 1; min-width: 0; }
+.heatmap-grid { display: flex; gap: 3px; overflow-x: auto; padding-bottom: 4px; }
+.heatmap-grid::-webkit-scrollbar { display: none; }
+.heatmap-week { display: flex; flex-direction: column; gap: 3px; }
+.heatmap-day {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--c-bg-overlay);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.heatmap-active { background: var(--c-gold) !important; }
+.heatmap-today { outline: 2px solid var(--c-ep2); outline-offset: 1px; }
+.heatmap-legend { display: flex; align-items: center; gap: var(--s-2); margin-top: var(--s-2); }
+.heatmap-legend span { font-size: 10px; color: var(--c-text-muted); }
+.heatmap-legend-day { width: 11px; height: 11px; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════
+   PROFIL — Trial banner
+═══════════════════════════════════════════════════════ */
+.profile-trial-banner {
+  background: linear-gradient(135deg, rgba(167,139,250,0.08), rgba(96,165,250,0.08));
+  border: 1px solid rgba(167,139,250,0.3);
+  border-radius: var(--r-xl);
+  padding: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.profile-trial-top { display: flex; align-items: center; justify-content: space-between; }
+.profile-trial-badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: var(--c-gold);
+  color: var(--c-bg-base);
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+}
+.profile-trial-price { font-size: var(--fs-xs); color: var(--c-text-muted); }
+.profile-trial-title { font-family: 'Syne', sans-serif; font-size: var(--fs-base); font-weight: 800; color: var(--c-text-primary); }
+.profile-trial-list { list-style: none; display: flex; flex-direction: column; gap: var(--s-1); }
+.profile-trial-list li { font-size: var(--fs-sm); color: var(--c-text-secondary); }
+.profile-trial-note { font-size: 11px; color: var(--c-text-muted); text-align: center; }

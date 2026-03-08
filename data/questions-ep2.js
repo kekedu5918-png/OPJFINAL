@@ -2706,5 +2706,143 @@ window.QUESTIONS_EP2 = [
     article: "Art. 97 et 706-154 CPP",
     trap: null,
     isPro: false
+  },
+
+  /* ── ANNALES OFFICIELLES — EP2 ── */
+  {
+    id: "ep2_annale_001",
+    epreuve: 2, module: "PP_GAV", difficulty: 2,
+    isAnnale: true,
+    question: "Un individu est placé en garde à vue à 14h00 pour escroquerie (peine max : 5 ans). Il est 22h00. Son avocat demande à consulter le PV d'audition de 16h00. L'OPJ peut-il refuser cette consultation ?",
+    answers: [
+      "Non — depuis la loi du 27 mai 2014, l'avocat a le droit de consulter tous les PV d'audition de la personne gardée à vue",
+      "Oui — l'avocat ne peut consulter que le PV de placement en GAV et le certificat médical",
+      "Oui — jusqu'à l'expiration de la 1re tranche de 24h, l'accès aux PV peut être différé",
+      "Oui — si l'OPJ estime que la consultation nuirait à l'enquête"
+    ],
+    correct: 0,
+    explanation: "Art. 63-4-1 CPP : l'avocat a le droit de consulter, dès qu'il intervient, le procès-verbal de notification des droits, le certificat médical et les procès-verbaux d'audition de la personne gardée à vue. Ce droit est absolu — l'OPJ ne peut pas s'y opposer. En revanche, l'avocat n'a pas accès au reste du dossier de procédure.",
+    article: "Art. 63-4-1 CPP",
+    trap: "L'avocat accède aux PV d'AUDITION (de la personne en GAV) mais pas aux PV d'enquête ou à l'ensemble du dossier.",
+    isPro: false
+  },
+  {
+    id: "ep2_annale_002",
+    epreuve: 2, module: "PP_Instruction", difficulty: 3,
+    isAnnale: true,
+    question: "En matière de détention provisoire, quel est le délai maximum pour un mis en examen pour vol aggravé en bande organisée (peine max : 15 ans) ?",
+    answers: [
+      "4 ans de détention provisoire au total (délit aggravé en bande organisée selon art. 145-2)",
+      "2 ans maximum pour tout délit, quelle que soit la peine encourrue",
+      "1 an non renouvelable pour les délits correctionnels",
+      "Pas de délai maximum — le JI peut maintenir indéfiniment si les charges le justifient"
+    ],
+    correct: 0,
+    explanation: "Art. 145-2 CPP : en matière correctionnelle, la durée maximale de détention provisoire est : 4 mois (base) renouvelable. Pour les infractions en bande organisée punies de 10 ans ou plus, le maximum total peut atteindre 4 ans. Vol aggravé en bande organisée = 15 ans → entre dans la catégorie des délits graves → 4 ans maximum. Il existe toujours un plafond légal.",
+    article: "Art. 145-2 CPP",
+    trap: "Il y a toujours un plafond légal. Le maximum varie selon la peine encourrue : 2 ans pour délits ≤ 5 ans, 4 ans pour bande organisée ≥ 10 ans.",
+    isPro: false
+  },
+  {
+    id: "ep2_annale_003",
+    epreuve: 2, module: "PP_flagrance", difficulty: 2,
+    isAnnale: true,
+    question: "Lors d'une perquisition en enquête de flagrance, l'OPJ découvre un ordinateur. Peut-il consulter immédiatement son contenu ?",
+    answers: [
+      "Non — la saisie physique est possible mais la consultation du contenu nécessite des réquisitions ou une autorisation judiciaire",
+      "Oui — la flagrance autorise la consultation immédiate de tout support informatique",
+      "Oui — si le propriétaire est présent et ne s'oppose pas verbalement",
+      "Non — il faut toujours une expertise judiciaire ordonnée par le JI"
+    ],
+    correct: 0,
+    explanation: "La saisie physique d'un ordinateur est possible en flagrance (art. 56 CPP). En revanche, son CONTENU (emails, fichiers, messageries) constitue des données personnelles protégées. Leur consultation nécessite soit des réquisitions aux opérateurs (si données cloud) soit un expert judiciaire (pour le contenu local). En pratique, l'appareil est saisi et placé sous scellé, l'extraction de données est réalisée ultérieurement avec autorisation.",
+    article: "Art. 56 CPP et art. 60-1 CPP",
+    trap: "Saisie physique (OK immédiatement) ≠ consultation du contenu (nécessite procédure). Distinction fondamentale.",
+    isPro: false
+  },
+  {
+    id: "ep2_annale_004",
+    epreuve: 2, module: "PP_Mineurs", difficulty: 2,
+    isAnnale: true,
+    question: "Un mineur de 14 ans est interpellé pour vol avec violence (peine max : 5 ans). Peut-il être placé en garde à vue ?",
+    answers: [
+      "Oui — les mineurs de 13 à 16 ans peuvent être placés en GAV si l'infraction est punie d'au moins 5 ans (durée : 24h + 24h possible)",
+      "Non — la GAV est interdite avant 16 ans, seule la retenue de 12h est possible",
+      "Oui — comme un majeur, durée 24h + 24h, pour toute infraction punissable",
+      "Non — la GAV est toujours interdite avant 18 ans (CJPM)"
+    ],
+    correct: 0,
+    explanation: "CJPM (art. L.413-13) : les mineurs de 13 à 16 ans peuvent être placés en GAV si l'infraction est punie d'au moins 5 ans d'emprisonnement. Vol avec violence (art. 311-4) = 5 ans → condition remplie ✓. Durée : 24h + 24h possible (même que pour les 16-18 ans et les adultes pour cette catégorie). Droits renforcés : représentant légal informé immédiatement, avocat obligatoire, examen médical.",
+    article: "Art. L.413-13 CJPM",
+    trap: "Attention au seuil : 5 ans (pas 1 an). Un mineur de 14 ans arrêté pour conduite sans permis (2 ans) ne peut pas être en GAV.",
+    isPro: false
+  },
+  {
+    id: "ep2_annale_005",
+    epreuve: 2, module: "PP_Procédure", difficulty: 3,
+    isAnnale: true,
+    question: "Un OPJ reçoit une commission rogatoire (CR) du juge d'instruction lui demandant d'entendre M. SIMON en qualité de témoin. En cours d'audition, M. SIMON fait des aveux qui en font un suspect. Que doit faire l'OPJ ?",
+    answers: [
+      "Interrompre l'audition, notifier à M. SIMON ses droits de personne soupçonnée (droit au silence, avocat) et reprendre sous un statut adapté, en référant au JI",
+      "Continuer l'audition en témoin — les aveux sont valides dans tous les cas",
+      "Placer immédiatement M. SIMON en garde à vue et informer le PR (pas le JI)",
+      "Clore le PV d'audition et saisir le JI d'un rapport sans entendre M. SIMON davantage"
+    ],
+    correct: 0,
+    explanation: "Quand une personne entendue comme témoin révèle des éléments qui en font un suspect, continuer à l'entendre sous serment de témoin est irrégulier. L'OPJ doit interrompre l'audition, notifier les droits (art. 61-1 CPP sur l'audition libre d'une personne soupçonnée), et en référer au JI qui pourra modifier le statut (témoin assisté → mis en examen). Les aveux sous serment de témoin peuvent être annulés.",
+    article: "Art. 61-1 CPP et 102 CPP",
+    trap: "Un suspect ne peut pas être entendu sous serment de témoin. Les aveux obtenus en violation de cette règle sont nuls.",
+    isPro: false
+  },
+  {
+    id: "ep2_annale_006",
+    epreuve: 2, module: "PP_GAV", difficulty: 1,
+    isAnnale: true,
+    question: "Lors du placement en garde à vue, dans quel délai l'OPJ doit-il aviser le Procureur de la République ?",
+    answers: [
+      "Dès le début de la garde à vue, sans délai (immédiatement)",
+      "Dans les 3 heures suivant le placement",
+      "Dans les 6 heures suivant le placement",
+      "Avant toute audition de la personne gardée à vue"
+    ],
+    correct: 0,
+    explanation: "Art. 63 al. 1 CPP : 'L'officier de police judiciaire informe dès le début de la garde à vue le procureur de la République.' Le terme 'dès le début' signifie sans délai, immédiatement. Le PR peut alors décider de mettre fin à la GAV ou d'autoriser des actes. Tout délai est une violation procédurale susceptible de nullité.",
+    article: "Art. 63 al. 1 CPP",
+    trap: "Il n'y a PAS de délai de grâce (pas 3h, pas 6h). C'est immédiat.",
+    isPro: false
+  },
+  {
+    id: "ep2_annale_007",
+    epreuve: 2, module: "PP_Procédure", difficulty: 2,
+    isAnnale: true,
+    question: "La CRPC (Comparution sur Reconnaissance Préalable de Culpabilité) peut-elle être proposée pour un homicide involontaire commis par un conducteur ivre (art. 221-6 al. 2 CP, 7 ans) ?",
+    answers: [
+      "Non — la CRPC est expressément exclue pour les homicides involontaires par conducteur en état alcoolique lorsqu'il y a des blessures graves ou décès",
+      "Oui — la CRPC s'applique à tous les délits punis d'au moins 1 an d'emprisonnement sans exclusion",
+      "Oui — mais uniquement si la peine proposée n'excède pas 3 ans d'emprisonnement ferme",
+      "Non — la CRPC est interdite pour tous les délits routiers"
+    ],
+    correct: 0,
+    explanation: "Art. 495-16 CPP : la CRPC est exclue pour certaines infractions, notamment les homicides involontaires commis par des conducteurs en infraction (alcool, stupéfiants, vitesse excessive) ayant entraîné décès ou blessures graves. Cette exclusion vise à garantir un procès public pour les victimes. Toute la matière routière grave ne peut pas être traitée par CRPC.",
+    article: "Art. 495-16 CPP",
+    trap: "La CRPC n'est pas applicable à toutes les infractions punies de 1 an+. Il existe des exclusions légales explicites.",
+    isPro: false
+  },
+  {
+    id: "ep2_annale_008",
+    epreuve: 2, module: "PP_GAV", difficulty: 2,
+    isAnnale: true,
+    question: "Mme RICHARD est gardée à vue pour escroquerie. Elle est enceinte de 7 mois. Quels droits ou mesures spécifiques s'appliquent à sa situation ?",
+    answers: [
+      "Elle a droit à un examen médical immédiat. Les conditions de détention doivent être adaptées. Elle peut bénéficier d'une mesure alternative à la GAV si son état de santé l'exige",
+      "La grossesse est une cause d'irresponsabilité pénale — la GAV est impossible",
+      "Elle a les mêmes droits qu'un suspect ordinaire, sans mesure spécifique liée à la grossesse",
+      "La GAV est automatiquement réduite à 12h en cas de grossesse visible"
+    ],
+    correct: 0,
+    explanation: "La grossesse est une circonstance de vulnérabilité au sens du droit pénal. En GAV : examen médical obligatoire (art. 63-3 CPP) et l'état de santé est pris en compte. Le médecin peut recommander des conditions adaptées ou une alternative à la GAV. La grossesse n'est pas une immunité pénale mais une vulnérabilité qui oblige à des précautions. L'OPJ doit aussi en informer la personne et le médecin.",
+    article: "Art. 63-3 CPP",
+    trap: "La grossesse n'est pas une cause d'irresponsabilité mais une vulnérabilité. L'examen médical est obligatoire à la demande de la personne.",
+    isPro: false
   }
 ];
