@@ -160,6 +160,37 @@ function render(container) {
 
   const trendIcon = (t) => t === 'up' ? '📈' : t === 'down' ? '📉' : t === 'stable' ? '➡️' : '';
 
+  // État vide : pas encore assez de données
+  if (totalSessions < 3 && ep1Score === null && ep2Score === null) {
+    container.innerHTML = `
+      <div class="diag-screen">
+        <div class="diag-header">
+          <h1 class="diag-title">Diagnostic</h1>
+          <p class="diag-subtitle">Analyse de tes performances</p>
+        </div>
+        <div class="diag-empty-state">
+          <div class="diag-empty-icon">📊</div>
+          <h2 class="diag-empty-title">Pas encore de données</h2>
+          <p class="diag-empty-sub">Complète au moins <strong>5 sessions QCM</strong> pour voir ton diagnostic complet avec score prévisionnel, courbes de progression et recommandations personnalisées.</p>
+          <div class="diag-empty-progress">
+            <div class="diag-empty-steps">
+              ${[1,2,3,4,5].map(n => `<div class="diag-empty-step ${totalSessions >= n ? 'diag-empty-step-done' : ''}">
+                ${totalSessions >= n ? '✓' : n}
+              </div>`).join('')}
+            </div>
+            <p class="diag-empty-count">${totalSessions}/5 sessions complétées</p>
+          </div>
+          <button type="button" class="btn btn-primary btn-lg btn-full" data-route="train">Lancer une session →</button>
+          <button type="button" class="btn btn-ghost btn-full" style="margin-top:var(--s-2)" data-route="learn">Commencer par une leçon</button>
+        </div>
+      </div>
+    `;
+    container.querySelectorAll('[data-route]').forEach(btn => {
+      btn.addEventListener('click', () => window.Router.navigate(`#${btn.getAttribute('data-route')}`));
+    });
+    return;
+  }
+
   container.innerHTML = `
     <div class="diag-screen">
       <div class="diag-header">

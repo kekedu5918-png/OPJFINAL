@@ -62,6 +62,7 @@ function mdToHtml(raw) {
   let html = '';
   let inTable = false;
   let inList = false;
+  let listType = 'ul';
   let tableRows = [];
 
   const flushTable = () => {
@@ -80,12 +81,14 @@ function mdToHtml(raw) {
       inTable = false;
     }
   };
+
   const flushList = () => {
-    if (inList) { html += '</ul>'; inList = false; }
+    if (inList) { html += `</${listType}>`; inList = false; }
   };
 
   for (const line of lines) {
-    if (line.includes('|')) {
+    // Tables: uniquement si la ligne contient | ET ne contient pas de texte courant
+    if (line.match(/^\s*\|/) || (line.includes('|') && line.match(/\|.*\|/))) {
       flushList();
       inTable = true;
       tableRows.push(line);
@@ -93,27 +96,43 @@ function mdToHtml(raw) {
     }
     if (inTable) flushTable();
 
-    if (line.startsWith('- ') || line.startsWith('* ')) {
-      if (!inList) { html += '<ul class="lesson-list">'; inList = true; }
+    // Mémos clés (encadré doré)
+    if (line.startsWith('📌') || line.toLowerCase().startsWith('**mémo') || line.toLowerCase().startsWith('**moyen mnémotechnique')) {
+      flushList();
+      html += `<div class="lesson-memo">${mdInline(line)}</div>`;
+    }
+    // Pièges (encadré rouge/orange)
+    else if (line.startsWith('⚠️') || line.toLowerCase().includes('piège') && line.startsWith('**')) {
+      flushList();
+      html += `<div class="lesson-trap">${mdInline(line)}</div>`;
+    }
+    // Info/conseil (encadré bleu)
+    else if (line.startsWith('🔑') || line.startsWith('💡') || line.startsWith('📖')) {
+      flushList();
+      html += `<div class="lesson-info">${mdInline(line)}</div>`;
+    }
+    // Listes non ordonnées
+    else if (line.startsWith('- ') || line.startsWith('* ')) {
+      if (!inList || listType !== 'ul') { if (inList) flushList(); html += '<ul class="lesson-list">'; inList = true; listType = 'ul'; }
       html += `<li>${mdInline(line.slice(2))}</li>`;
-    } else if (/^\d+\.\s/.test(line)) {
-      if (!inList) { html += '<ol class="lesson-list">'; inList = true; }
+    }
+    // Listes ordonnées
+    else if (/^\d+\.\s/.test(line)) {
+      if (!inList || listType !== 'ol') { if (inList) flushList(); html += '<ol class="lesson-list">'; inList = true; listType = 'ol'; }
       html += `<li>${mdInline(line.replace(/^\d+\.\s/, ''))}</li>`;
-    } else if (line.startsWith('**') && line.endsWith('**') && line.length > 4) {
+    }
+    // Lignes vides
+    else if (line.trim() === '') {
       flushList();
-      html += `<p class="lesson-callout">${mdInline(line)}</p>`;
-    } else if (line.startsWith('⚠️') || line.startsWith('🔑') || line.startsWith('📌')) {
-      flushList();
-      html += `<div class="lesson-tip">${mdInline(line)}</div>`;
-    } else if (line.trim() === '') {
-      flushList();
-    } else {
+    }
+    // Texte normal
+    else {
       flushList();
       html += `<p>${mdInline(line)}</p>`;
     }
   }
   if (inTable) flushTable();
-  if (inList) html += '</ul>';
+  if (inList) flushList();
 
   return html;
 }

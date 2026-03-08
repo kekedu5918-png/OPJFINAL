@@ -421,6 +421,10 @@ function renderResults(container) {
   const xpGained = sessionState.answers.filter((a) => a.correct).length * XP_PER_CORRECT;
   recordSessionResult();
   window.Notifications.maybeAskPermissionAfterSession().catch(() => {});
+  // Proposer les notifs après 3 sessions (prompt engageant)
+  if (((window.AppState.getState('gamification.totalSessions') || 0) === 3) && !window.AppState.getState('settings.permissionAsked')) {
+    setTimeout(() => window.Notifications.showPermissionPrompt?.(), 1500);
+  }
   if (!window.Paywall.canAccessQcmSession()) window.Paywall.showSessionsExhaustedModal();
   if (score > 16) window.Paywall.showGoodScoreToast();
   const dangerEpreuve = score <= 5 ? (sessionState.questions[0]?.epreuve === 1 ? 'ep1' : 'ep2') : null;
