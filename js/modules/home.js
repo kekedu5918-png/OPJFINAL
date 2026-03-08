@@ -138,7 +138,7 @@ function getTodayProgress() {
 }
 
 /**
- * Rendu du header sticky.
+ * Rendu du header home (compact, pas de duplication avec l'app-header global).
  * @returns {string}
  */
 function renderHeader() {
@@ -146,14 +146,21 @@ function renderHeader() {
   const grade = window.AppState.currentGrade();
   const pulseClass = streak > 7 ? 'home-streak-pulse' : '';
   const streakColor = streak > 0 ? '' : 'home-streak-zero';
+  const user = window.AppState.getState('user') || {};
+  const prenom = (user.name || '').trim().split(/\s+/)[0] || 'Agent';
   return `
-    <header class="home-header">
-      <button type="button" class="home-logo-btn" data-route="home" aria-label="Accueil">
-        <img src="assets/icons/icon-192.png" alt="OPJ Examen" class="home-logo-img">
-      </button>
-      <span class="home-streak ${pulseClass} ${streakColor}">🔥 ${streak}</span>
-      <button type="button" class="home-grade-badge" aria-label="Profil" data-route="profile" style="background-color: ${grade?.color || 'var(--c-border)'};"></button>
-    </header>
+    <div class="home-header">
+      <div class="home-header-left">
+        <p class="home-header-greeting">${getGreeting(prenom)}</p>
+        <p class="home-header-grade" style="color:${grade?.color || 'var(--c-gold)'}">${grade?.name || 'Gardien Élève'}</p>
+      </div>
+      <div class="home-header-right">
+        <span class="home-streak ${pulseClass} ${streakColor}" title="Série de jours">🔥 ${streak}</span>
+        <button type="button" class="home-grade-badge" aria-label="Mon profil" data-route="profile" style="background: ${grade?.color || 'var(--c-border)'}22; border-color: ${grade?.color || 'var(--c-border)'}; color: ${grade?.color || 'var(--c-gold)'};">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+      </div>
+    </div>
   `;
 }
 
@@ -175,7 +182,7 @@ function renderHeroCard() {
   const isPro = pro.isActive === true;
 
   let countdownBlock = '';
-  if (days != null) {
+  if (days !== null && days >= 0) {
     countdownBlock = `
       <div class="home-countdown-wrap">
         <span class="home-countdown-num ${countdownClass}">${days}</span>
@@ -183,7 +190,7 @@ function renderHeroCard() {
       </div>
     `;
   } else {
-    countdownBlock = `<button type="button" class="btn btn-ghost btn-md" data-route="train" data-set-exam="">📅 Définir ma date d'examen</button>`;
+    countdownBlock = `<button type="button" class="btn btn-ghost btn-md" data-set-exam-date="">📅 Définir ma date d'examen</button>`;
   }
 
   const pastilles = scores.map((s) => {
@@ -228,23 +235,28 @@ function renderHeroCard() {
  */
 function renderQuickStats() {
   const weeklyXp = window.AppState.getState('gamification.weeklyXP') ?? 0;
+  const totalSessions = window.AppState.getState('gamification.totalSessions') ?? 0;
   const globalPct = getGlobalMasteryPct();
-  const ranking = '—';
+  const lessons = (window.AppState.getState('progress.lessons.completed') || []).length;
 
   return `
     <div class="home-quick-stats">
-      <div class="home-quick-stat card card-interactive">
-        <span class="home-quick-stat-label">XP cette semaine</span>
-        <span class="home-quick-stat-value mono">${weeklyXp}</span>
+      <div class="home-quick-stat card" data-route="diagnostic">
+        <span class="home-quick-stat-label">XP semaine</span>
+        <span class="home-quick-stat-value mono" style="color:var(--c-gold)">${weeklyXp.toLocaleString()}</span>
       </div>
-      <div class="home-quick-stat card card-interactive">
-        <span class="home-quick-stat-label">Maîtrise globale</span>
+      <div class="home-quick-stat card" data-route="diagnostic">
+        <span class="home-quick-stat-label">Maîtrise</span>
         <span class="home-quick-stat-value mono">${globalPct}%</span>
         <div class="progress-bar home-quick-progress"><div class="progress-fill" style="width: ${globalPct}%;"></div></div>
       </div>
-      <div class="home-quick-stat card card-interactive">
-        <span class="home-quick-stat-label">Classement</span>
-        <span class="home-quick-stat-value mono">${ranking}</span>
+      <div class="home-quick-stat card" data-route="profile">
+        <span class="home-quick-stat-label">Sessions</span>
+        <span class="home-quick-stat-value mono">${totalSessions}</span>
+      </div>
+      <div class="home-quick-stat card" data-route="learn">
+        <span class="home-quick-stat-label">Leçons</span>
+        <span class="home-quick-stat-value mono" style="color:var(--c-ep2)">${lessons}</span>
       </div>
     </div>
   `;
@@ -260,29 +272,31 @@ function renderTodaySection() {
   const lesson = getRecommendedLesson();
   const pro = window.AppState.getState('pro') || {};
   const isPro = pro.isActive === true;
-  const lockQcm = !isPro;
-  const lockFlash = !isPro;
-  const lockLesson = !isPro;
+  // QCM EP2 gratuit : accessible jusqu'à 3 sessions/jour (plan freemium)
+  const canQcm = window.Paywall?.canAccessQcmSession?.() !== false;
+  const lockFlash = false; // Flashcards accessibles en gratuit (DPG/DPS verrouillés dedans)
+  const lockLesson = false; // Leçons accessibles en gratuit (contenu PRO verrouillé dedans)
 
   const qcmProgress = goal > 0 ? Math.min(100, (done / goal) * 100) : 0;
   const flashDisabled = dueCards === 0;
+  const sessionsLeft = canQcm ? (3 - (window.Paywall?.getQcmSessionsToday?.() ?? 0)) : 0;
+  const qcmLabel = isPro ? `${goal} questions` : `${Math.max(0, sessionsLeft)} session${sessionsLeft !== 1 ? 's' : ''} restante${sessionsLeft !== 1 ? 's' : ''}`;
 
   return `
     <section class="home-section">
       <h2 class="home-section-title">Ta session du jour</h2>
       <div class="home-today-cards">
-        <div class="home-today-card card card-interactive ${lockQcm ? 'home-card-locked' : ''}" data-route="train">
-          ${lockQcm ? '<span class="home-card-lock" aria-hidden="true">🔒</span>' : ''}
-          <span class="badge badge-ep1">EP1</span>
-          <span class="home-today-card-main">${goal} questions</span>
+        <div class="home-today-card card card-interactive ${!canQcm ? 'home-card-locked' : ''}" data-route="train">
+          ${!canQcm ? '<span class="home-card-lock" aria-hidden="true">🔒</span>' : ''}
+          <span class="badge badge-ep2">QCM</span>
+          <span class="home-today-card-main">${qcmLabel}</span>
           <div class="progress-bar"><div class="progress-fill" style="width: ${qcmProgress}%;"></div></div>
         </div>
-        <div class="home-today-card card card-interactive ${flashDisabled ? 'home-today-card-disabled' : ''} ${lockFlash ? 'home-card-locked' : ''}" data-route="infractions">
-          ${lockFlash ? '<span class="home-card-lock" aria-hidden="true">🔒</span>' : ''}
-          <span class="home-today-card-main">🧠 ${dueCards} cartes à revoir</span>
+        <div class="home-today-card card card-interactive ${flashDisabled ? 'home-today-card-disabled' : ''}" data-route="flashcards">
+          <span class="home-today-card-main">🃏 ${dueCards > 0 ? `${dueCards} cartes dues` : 'Flashcards à jour ✓'}</span>
+          <span class="home-today-card-meta">Répétition espacée</span>
         </div>
-        <div class="home-today-card card card-interactive ${lockLesson ? 'home-card-locked' : ''}" data-route="learn">
-          ${lockLesson ? '<span class="home-card-lock" aria-hidden="true">🔒</span>' : ''}
+        <div class="home-today-card card card-interactive" data-route="learn">
           <span class="home-today-card-main">${lesson.title}</span>
           <span class="home-today-card-meta">${lesson.duration}</span>
         </div>
@@ -418,5 +432,47 @@ function render(container) {
       if (route) window.Router.navigate(`#${route}`);
     });
   });
+
+  // Bouton "Définir ma date d'examen" → modal date picker inline
+  container.querySelector('[data-set-exam-date]')?.addEventListener('click', () => {
+    showExamDatePicker(container);
+  });
 }
+
+/**
+ * Mini modal pour définir la date d'examen sans quitter l'écran.
+ */
+function showExamDatePicker(container) {
+  const today = new Date().toISOString().slice(0, 10);
+  const existing = document.getElementById('exam-date-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'exam-date-modal';
+  modal.className = 'exam-date-modal';
+  modal.innerHTML = `
+    <div class="exam-date-modal-inner">
+      <h3 class="exam-date-modal-title">📅 Date de l'examen</h3>
+      <p class="exam-date-modal-sub">Saisir ta date pour activer le compte à rebours</p>
+      <input type="date" id="exam-date-input" class="exam-date-input" min="${today}" value="">
+      <div class="exam-date-actions">
+        <button type="button" class="btn btn-primary btn-full" id="exam-date-confirm">Confirmer</button>
+        <button type="button" class="btn btn-ghost btn-full" id="exam-date-cancel">Annuler</button>
+      </div>
+      <p class="exam-date-tip">Examen PN : 20 mai 2026 · GN : dernier trimestre 2026</p>
+    </div>
+  `;
+  document.getElementById('modal-container')?.appendChild(modal);
+  requestAnimationFrame(() => modal.classList.add('exam-date-modal-visible'));
+
+  modal.querySelector('#exam-date-confirm')?.addEventListener('click', () => {
+    const val = modal.querySelector('#exam-date-input')?.value;
+    if (val) {
+      window.AppState.dispatch('UPDATE_USER', { examDate: val });
+      modal.remove();
+      window.Home.render(container);
+    }
+  });
+  modal.querySelector('#exam-date-cancel')?.addEventListener('click', () => modal.remove());
+}
+
 window.Home = { render };

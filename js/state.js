@@ -137,6 +137,8 @@ function predictedScore(state, epreuve) {
 
 /**
  * Score total prévu (PN/GN) : ep1×2 + ep2×3 + ep3×1, max 120.
+ * EP3 est optionnel : si pas de données EP3, on utilise 10/20 comme valeur neutre.
+ * Retourne null si ni EP1 ni EP2 n'ont de données (< 5 sessions chacune).
  * @param {object} state
  * @returns {number|null}
  */
@@ -144,8 +146,15 @@ function totalPredictedScore(state) {
   const ep1 = predictedScore(state, 'ep1');
   const ep2 = predictedScore(state, 'ep2');
   const ep3 = predictedScore(state, 'ep3');
-  if (ep1 == null || ep2 == null || ep3 == null) return null;
-  return ep1 * 2 + ep2 * 3 + ep3 * 1;
+  if (ep1 == null && ep2 == null) return null;
+  // Si EP3 pas encore joué, on l'exclut du calcul (affichage partiel)
+  const s1 = ep1 ?? 0;
+  const s2 = ep2 ?? 0;
+  if (ep3 == null) {
+    if (ep1 == null || ep2 == null) return null;
+    return s1 * 2 + s2 * 3;
+  }
+  return s1 * 2 + s2 * 3 + ep3 * 1;
 }
 
 /**

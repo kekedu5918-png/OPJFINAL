@@ -109,6 +109,8 @@ function registerRoutes() {
   router.register('cas-pratique', function(container) { window.CasePratique.render(container); });
   router.register('diagnostic', function(container) { window.Diagnostic.render(container); });
   router.register('profile', function(container) { window.Gamification.render(container); });
+  router.register('settings', function(container) { window.Gamification.render(container); }); // alias → profile
+  router.register('leaderboard', function(container) { renderLeaderboardComingSoon(container); });
   router.register('pro', function(container) { window.Paywall.showProScreen ? window.Paywall.showProScreen(container) : window.Paywall.showModal(container); });
   router.register('*', function(container, _params) {
     var name = router.getCurrentRoute().name;
@@ -173,6 +175,20 @@ function startApp() {
       window.location.hash = '#onboarding';
     }
   }
+}
+
+/**
+ * Écran Leaderboard (à venir — placeholder élaboré).
+ */
+function renderLeaderboardComingSoon(container) {
+  container.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70dvh;padding:var(--s-8);text-align:center;gap:var(--s-4);">
+      <div style="font-size:64px;">🏆</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:var(--fs-xl);font-weight:800;color:var(--c-text-primary);">Classement bientôt disponible</h2>
+      <p style="font-size:var(--fs-sm);color:var(--c-text-muted);max-width:300px;">Le classement national des préparateurs OPJ arrive dans la prochaine mise à jour. Continue à accumuler des XP pour avoir une longueur d'avance !</p>
+      <button type="button" class="btn btn-primary" onclick="window.Router.navigate('#profile')">Voir mon profil →</button>
+    </div>
+  `;
 }
 
 // Exposé globalement pour le bouton logo (header)
