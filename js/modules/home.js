@@ -20,7 +20,7 @@ function getGreeting(prenom) {
   if (h >= 6 && h < 12) return `Bonjour${name} 👮`;
   if (h >= 12 && h < 18) return `Bonne session${name} 👮`;
   if (h >= 18 && h < 22) return `Bonsoir${name} 👮`;
-  return `Encore debout${name} ? 🌙`;
+  return `Encore debout${name} 🌙`;
 }
 
 /**
