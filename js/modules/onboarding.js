@@ -215,37 +215,28 @@ function buildSlides() {
 }
 
 /**
- * Lit la largeur réelle du conteneur slides (en px) et l'applique à chaque slide.
- * Evite toute ambiguïté avec % / vw / max-width.
+ * Affiche l'étape demandée par fade (opacity).
+ * Aucune dépendance à des calculs de largeur ou de transformation CSS.
  */
-function applySlideWidths(root) {
-  const slidesEl = root.querySelector('.onboarding-slides');
-  if (!slidesEl) return 0;
-  const w = slidesEl.getBoundingClientRect().width;
-  if (!w) return 0;
-  const strip = root.querySelector('.onboarding-strip');
-  if (strip) strip.style.width = `${w * TOTAL_STEPS}px`;
-  root.querySelectorAll('.onboarding-slide').forEach(s => { s.style.width = `${w}px`; });
-  root._slideW = w;
-  return w;
-}
-
 function goToStep(root, step) {
-  const strip = root.querySelector('.onboarding-strip');
   const progressFill = root.querySelector('.onboarding-progress-fill');
   const counter = root.querySelector('.onboarding-step-counter');
   const backBtn = root.querySelector('.onboarding-back-btn');
-  if (!strip) return;
 
-  // Largeur réelle du slide (en px) pour un translateX précis
-  const w = root._slideW || applySlideWidths(root) || window.innerWidth;
-  strip.style.transform = `translateX(${-(step - 1) * w}px)`;
+  // Cache toutes les slides, affiche seulement celle demandée
+  root.querySelectorAll('.onboarding-slide').forEach((s, i) => {
+    const isActive = (i + 1) === step;
+    s.classList.toggle('onboarding-slide-active', isActive);
+  });
 
   if (progressFill) progressFill.style.width = `${(step / TOTAL_STEPS) * 100}%`;
   if (counter) counter.textContent = `${step}/${TOTAL_STEPS}`;
   if (backBtn) backBtn.style.display = step > 1 ? 'flex' : 'none';
   currentStep = step;
   root.setAttribute('data-step', String(step));
+  // Scroll en haut de la slide active
+  const activeSlide = root.querySelector('.onboarding-slide-active');
+  if (activeSlide) activeSlide.scrollTop = 0;
 }
 
 function validateStep2(root) {
@@ -269,9 +260,11 @@ function validateStep2(root) {
 }
 
 function rebuildAndGo(root, step) {
-  const selector = `.onboarding-slide-${step}`;
-  const slide = root.querySelector(selector);
-  if (!slide) return;
+  const slide = root.querySelector(`.onboarding-slide-${step}`);
+  if (!slide) {
+    console.warn('[Onboarding] slide', step, 'introuvable');
+    return;
+  }
   const screens = { 2: screen2, 3: screen3, 4: screen4, 5: screen5 };
   if (screens[step]) {
     slide.innerHTML = screens[step]();
@@ -405,16 +398,8 @@ function render(container) {
     </div>
   `;
   container.appendChild(root);
-  // Mesure les largeurs réelles après peinture du DOM
-  requestAnimationFrame(() => {
-    applySlideWidths(root);
-    // Resize : si l'utilisateur tourne le téléphone, recalcule
-    window.addEventListener('resize', () => {
-      root._slideW = null; // reset cache
-      applySlideWidths(root);
-      goToStep(root, parseInt(root.getAttribute('data-step') || '1', 10));
-    }, { once: false });
-  });
+  // Active la première slide immédiatement
+  goToStep(root, 1);
   bindEvents(root);
 }
 

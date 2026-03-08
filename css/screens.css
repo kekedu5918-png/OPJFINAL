@@ -84,7 +84,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   ONBOARDING — 5 écrans, slide horizontal, progress bar 1/5
+   ONBOARDING — 5 écrans, affichage fade (sans strip horizontal)
    ───────────────────────────────────────────────────────────── */
 
 .onboarding {
@@ -109,24 +109,25 @@
   transition: width var(--dur-slow) var(--ease-smooth);
 }
 
+/* Conteneur des slides : position relative, prend tout l'espace restant */
 .onboarding-slides {
   flex: 1;
+  position: relative;
   overflow: hidden;
+}
+
+/* Le strip n'est plus utilisé pour la translation — gardé pour compat */
+.onboarding-strip {
   position: relative;
   width: 100%;
-}
-
-.onboarding-strip {
-  display: flex;
-  /* La largeur est gérée en JS (px) pour éviter toute ambiguïté */
   height: 100%;
-  transition: transform var(--dur-slow) var(--ease-spring);
-  will-change: transform;
 }
 
+/* Chaque slide : absolue, pleine taille, cachée par défaut */
 .onboarding-slide {
-  /* width défini en inline JS = largeur exacte du conteneur */
-  flex: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
   min-height: 100%;
   overflow-y: auto;
   padding: var(--s-6) var(--s-4) calc(var(--s-8) + env(safe-area-inset-bottom));
@@ -135,6 +136,16 @@
   align-items: center;
   text-align: center;
   box-sizing: border-box;
+  /* Caché par défaut */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+/* Slide active = visible */
+.onboarding-slide.onboarding-slide-active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Écran 1 — Briefing */
