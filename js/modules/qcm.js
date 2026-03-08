@@ -146,7 +146,22 @@ function renderSelector(container) {
 
   container.innerHTML = `
     <div class="qcm-selector">
-      <h1 class="qcm-selector-title">Choisir une session</h1>
+      <h1 class="qcm-selector-title">S'entraîner</h1>
+
+      <!-- SESSION EXPRESS — micro-session 5 questions -->
+      <button type="button" class="qcm-express-btn" data-qcm-express>
+        <div class="qcm-express-left">
+          <span class="qcm-express-icon">⚡</span>
+          <div>
+            <p class="qcm-express-title">Session express</p>
+            <p class="qcm-express-sub">5 questions · ~5 min · Parfait entre deux gardes</p>
+          </div>
+        </div>
+        <span class="qcm-express-go">→</span>
+      </button>
+
+      <div class="qcm-divider"><span>ou personnaliser</span></div>
+
       <div class="qcm-filters">
         <p class="qcm-filter-label">Épreuve</p>
         <div class="qcm-filter-row">
@@ -165,7 +180,7 @@ function renderSelector(container) {
           ${countOptions.map((n) => `<button type="button" class="card card-interactive qcm-filter-card ${filters.count === n ? 'card-gold' : ''}" data-qcm-count="${n}">${n}</button>`).join('')}
         </div>
       </div>
-      <p class="qcm-preview">Session : ${count} questions · ~${count} min</p>
+      <p class="qcm-preview">Session : ${count} questions · ~${Math.ceil(count * 1.5)} min</p>
       <div class="qcm-selector-cta-wrap ${locked ? 'qcm-locked-wrap' : ''}">
         ${locked ? '<span class="qcm-lock-overlay">🔒</span>' : ''}
         <button type="button" class="btn btn-primary btn-lg btn-full" data-qcm-launch>Lancer →</button>
@@ -195,6 +210,19 @@ function renderSelector(container) {
       renderSelector(container);
     });
   });
+  // Session express : 5 questions EP2 (accessible gratuit)
+  container.querySelector('[data-qcm-express]')?.addEventListener('click', () => {
+    if (!window.Paywall.canAccessQcmSession()) { window.Paywall.showSessionsExhaustedModal(); return; }
+    sessionState.questions = filterQuestions({ epreuve: 'ep2_pp', difficulty: null, count: 5 });
+    sessionState.index = 0; sessionState.answers = [];
+    sessionState.startedAt = new Date().toISOString();
+    sessionState.comboCount = 0; sessionState.epreuveFilter = 'ep2_pp';
+    if (!sessionState.questions.length) return;
+    window.qcmActive = true;
+    window.Router.navigate('#qcm');
+    render(container);
+  });
+
   container.querySelector('[data-qcm-launch]')?.addEventListener('click', () => {
     if (locked) return;
     const f = sessionState.filters || { epreuve: 'all', difficulty: 'all', count: 10 };
@@ -327,14 +355,36 @@ function renderQuestion(container) {
       return;
     }
     const headerClass = isCorrect ? 'qcm-drawer-ok' : 'qcm-drawer-ko';
-    const headerText = isCorrect ? '✓ Bonne réponse' : '✗ Pas tout à fait';
+    const headerText = isCorrect ? '✓ Bonne réponse !' : '✗ Pas tout à fait';
     const stars = '★'.repeat(q.difficulty || 1) + '☆'.repeat(3 - (q.difficulty || 1));
+    const LETTERS = ['A', 'B', 'C', 'D'];
+
+    // Modèle UWorld : explication pour TOUS les choix (correct + incorrects)
+    const allAnswersHtml = (q.answers || []).map((ans, i) => {
+      const isRight = i === q.correct;
+      const wasSelected = i === selectedIndex;
+      let cls = isRight ? 'qcm-uworld-correct' : (wasSelected && !isCorrect ? 'qcm-uworld-wrong' : 'qcm-uworld-other');
+      // Explication par choix si disponible (champ explanations[])
+      const choiceExpl = q.explanations?.[i] || (isRight ? q.explanation : null);
+      return `
+        <div class="qcm-uworld-row ${cls}">
+          <span class="qcm-uworld-letter">${LETTERS[i]}</span>
+          <div class="qcm-uworld-content">
+            <p class="qcm-uworld-ans">${ans}</p>
+            ${isRight ? `<p class="qcm-uworld-expl">${q.explanation || ''}</p>` : ''}
+            ${choiceExpl && !isRight ? `<p class="qcm-uworld-expl">${choiceExpl}</p>` : ''}
+          </div>
+          ${isRight ? '<span class="qcm-uworld-badge qcm-uworld-badge-ok">✓</span>' : (wasSelected && !isCorrect ? '<span class="qcm-uworld-badge qcm-uworld-badge-ko">✗</span>' : '')}
+        </div>
+      `;
+    }).join('');
+
     drawerContent.innerHTML = `
       <p class="qcm-drawer-header ${headerClass}">${headerText}</p>
-      <p class="qcm-drawer-explanation">${q.explanation || ''}</p>
-      ${q.article ? `<button type="button" class="badge qcm-drawer-article">📖 ${q.article}</button>` : ''}
+      <div class="qcm-uworld-answers">${allAnswersHtml}</div>
+      ${q.article ? `<div class="qcm-drawer-article-row"><span class="badge qcm-drawer-article">📖 ${q.article}</span></div>` : ''}
       ${q.trap ? `<div class="qcm-drawer-trap"><strong>⚠️ Piège :</strong> ${q.trap}</div>` : ''}
-      <p class="qcm-drawer-diff">Difficulté : ${stars}</p>
+      <p class="qcm-drawer-diff">Difficulté : ${stars} ${q.isAnnale ? '· <span class="qcm-annale-badge">📋 Annale</span>' : ''}</p>
       <button type="button" class="btn btn-primary btn-lg btn-full" data-qcm-next>Question suivante →</button>
     `;
     drawer.style.display = '';

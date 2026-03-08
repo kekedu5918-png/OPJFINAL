@@ -517,9 +517,65 @@ function renderActusSection() {
 /**
  * Rendu section "Outils complémentaires".
  */
+/**
+ * Cohorte par date d'examen.
+ */
+function renderCohortBanner() {
+  const user = window.AppState.getState('user') || {};
+  const days = window.AppState.daysUntilExam();
+  if (days === null) return '';
+  const corps = (user.corps || '').toUpperCase();
+  const examDate = user.examDate ? new Date(user.examDate) : null;
+  if (!examDate) return '';
+  const month = examDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+  const cohortName = `Promotion OPJ ${month} · ${corps || 'PN/GN'}`;
+  const weeklyXP = window.AppState.getState('gamification.weeklyXP') || 0;
+  return `
+    <div class="home-cohort-banner" data-route="leaderboard">
+      <div class="home-cohort-left">
+        <span class="home-cohort-icon">👮</span>
+        <div>
+          <p class="home-cohort-name">${cohortName}</p>
+          <p class="home-cohort-sub">${weeklyXP.toLocaleString()} XP cette semaine · Voir le classement →</p>
+        </div>
+      </div>
+      <span class="home-cohort-arrow">›</span>
+    </div>
+  `;
+}
+
+/**
+ * Widget streak + freeze visible en home.
+ */
+function renderStreakWidget() {
+  const streak = window.AppState.getState('gamification.streak') || 0;
+  const freezes = window.AppState.getState('gamification.streakFreezes') || 0;
+  const lastDate = window.AppState.getState('gamification.lastStreakDate');
+  const today = new Date().toISOString().slice(0, 10);
+  const streakAtRisk = streak > 0 && lastDate !== today;
+  if (streak < 2) return '';
+  return `
+    <div class="home-streak-widget ${streakAtRisk ? 'home-streak-at-risk' : ''}">
+      <div class="home-streak-left">
+        <span class="home-streak-fire ${streak >= 7 ? 'home-streak-big' : ''}">🔥</span>
+        <div>
+          <p class="home-streak-num"><strong>${streak}</strong> jours consécutifs</p>
+          <p class="home-streak-sub">${streakAtRisk ? '⚠️ Ta série est en danger — révise aujourd\'hui !' : streak >= 7 ? 'Continue — tu es dans le top de ta brigade !' : 'Construis ta série !'}</p>
+        </div>
+      </div>
+      ${freezes > 0 ? `
+        <button type="button" class="home-streak-freeze-btn" data-use-freeze title="Utiliser un streak freeze">
+          🧊 ×${freezes}
+        </button>
+      ` : ''}
+    </div>
+  `;
+}
+
 function renderToolsSection() {
   const tools = [
     { route: 'exam', icon: '🏋️', label: 'Mode Examen', desc: 'Conditions réelles' },
+    { route: 'leaderboard', icon: '🏆', label: 'Classement', desc: 'Brigade hebdo' },
     { route: 'flashcards', icon: '🃏', label: 'Flashcards', desc: 'Répétition espacée' },
     { route: 'cas-pratique', icon: '✍️', label: 'Cas pratiques', desc: 'Entraînement écrit' },
     { route: 'diagnostic', icon: '📊', label: 'Diagnostic', desc: 'Tes résultats' },
@@ -553,7 +609,9 @@ function render(container) {
     <div class="screen-home">
       ${renderHeader()}
       <div class="home-scroll">
+        ${renderStreakWidget()}
         ${renderHeroCard()}
+        ${renderCohortBanner()}
         ${renderQuickStats()}
         ${renderRevisionPlan()}
         ${renderTodaySection()}
@@ -571,9 +629,17 @@ function render(container) {
     });
   });
 
-  // Bouton "Définir ma date d'examen" → modal date picker inline
   container.querySelector('[data-set-exam-date]')?.addEventListener('click', () => {
     showExamDatePicker(container);
+  });
+
+  container.querySelector('[data-use-freeze]')?.addEventListener('click', () => {
+    const freezes = window.AppState.getState('gamification.streakFreezes') || 0;
+    if (freezes > 0) {
+      window.AppState.dispatch('USE_STREAK_FREEZE');
+      window.AppState.dispatch('INCREMENT_STREAK');
+      window.Home.render(container);
+    }
   });
 }
 

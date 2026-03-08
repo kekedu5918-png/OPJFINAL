@@ -110,7 +110,7 @@ function registerRoutes() {
   router.register('diagnostic', function(container) { window.Diagnostic.render(container); });
   router.register('profile', function(container) { window.Gamification.render(container); });
   router.register('settings', function(container) { window.Gamification.render(container); }); // alias → profile
-  router.register('leaderboard', function(container) { renderLeaderboardComingSoon(container); });
+  router.register('leaderboard', function(container) { window.Leaderboard ? window.Leaderboard.render(container) : renderLeaderboardComingSoon(container); });
   router.register('exam', function(container) { window.ExamMode.render(container); });
   router.register('actus', function(container) { renderActusScreen(container); });
   router.register('pro', function(container) { window.Paywall.showProScreen ? window.Paywall.showProScreen(container) : window.Paywall.showModal(container); });

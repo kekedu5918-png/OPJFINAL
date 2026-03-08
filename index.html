@@ -727,6 +727,28 @@
     }
 
     /* ══════════════════════════════════
+       REVERSE TRIAL + GARANTIE
+    ══════════════════════════════════ */
+    .reverse-trial-banner {
+      display: flex; align-items: center; gap: 16px;
+      background: rgba(245,166,35,0.07); border: 1px solid rgba(245,166,35,0.25);
+      border-radius: 16px; padding: 20px 24px; margin-bottom: 32px;
+      font-size: 0.9rem; color: var(--text-2);
+    }
+    .reverse-trial-badge {
+      background: var(--gold); color: var(--bg-deep); font-weight: 800;
+      font-size: 0.72rem; padding: 4px 12px; border-radius: 99px; white-space: nowrap; flex-shrink: 0;
+    }
+    .garantie-banner {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.25);
+      border-radius: 16px; padding: 20px 24px; margin-top: 32px;
+    }
+    .garantie-icon { font-size: 2rem; flex-shrink: 0; }
+    .garantie-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--success); margin-bottom: 6px; }
+    .garantie-sub { font-size: 0.88rem; color: var(--text-2); line-height: 1.6; }
+
+    /* ══════════════════════════════════
        FOOTER
     ══════════════════════════════════ */
     footer {
@@ -1062,12 +1084,13 @@
       <div class="tarifs-header">
         <span class="section-label reveal">Tarifs</span>
         <h2 class="section-title reveal stagger-1">Moins cher qu'une heure<br>de prépa physique.</h2>
-        <div class="reveal stagger-2">
-          <div class="tarifs-toggle">
-            <button class="toggle-btn active" id="btn-mensuel" type="button" onclick="setToggle('mensuel')">Mensuel</button>
-            <button class="toggle-btn" id="btn-annuel" type="button" onclick="setToggle('annuel')">Annuel <span class="save-badge">−50%</span></button>
-          </div>
-        </div>
+        <p class="section-sub reveal stagger-2" style="font-size:0.95rem">Sup'Admission facture 5 500–7 900 €. Nous : 149 € pour 6 mois d'accès complet.</p>
+      </div>
+
+      <!-- Reverse trial banner -->
+      <div class="reverse-trial-banner reveal">
+        <span class="reverse-trial-badge">🎁 REVERSE TRIAL</span>
+        <p><strong>7 jours d'accès complet</strong> — explore tout, sans carte bancaire. Puis choisis ton plan.</p>
       </div>
 
       <div class="tarifs-grid reveal">
@@ -1075,52 +1098,53 @@
           <div class="tarif-name">Gratuit</div>
           <div class="tarif-price">
             <span class="tarif-amount">0€</span>
+            <span class="tarif-period">pour toujours</span>
           </div>
-          <div class="tarif-annual-note">&nbsp;</div>
+          <div class="tarif-annual-note" style="color:var(--text-3)">Idéal pour découvrir</div>
           <ul class="tarif-features">
-            <li><span class="check">✓</span> Épreuve 2 PP — QCM complets</li>
-            <li><span class="check">✓</span> Leçons Flagrance + GAV</li>
+            <li><span class="check">✓</span> EP2 Procédure Pénale (QCM complets)</li>
+            <li><span class="check">✓</span> Diagnostic de niveau personnalisé</li>
             <li><span class="check">✓</span> 3 sessions de 10 QCM/jour</li>
-            <li><span class="check">✓</span> 2 simulations compte rendu</li>
-            <li><span class="check">✓</span> 3 cartouches (apprentissage)</li>
-            <li><span class="cross">—</span> Explications après QCM</li>
-            <li><span class="cross">—</span> Épreuve 1 (DPG + DPS)</li>
-            <li><span class="cross">—</span> 40+ infractions complètes</li>
+            <li><span class="check">✓</span> Flashcards · Infractions (10)</li>
+            <li><span class="check">✓</span> Classement brigade hebdo</li>
+            <li><span class="cross">—</span> EP1 DPG + DPS (150 questions)</li>
+            <li><span class="cross">—</span> Explications détaillées après QCM</li>
+            <li><span class="cross">—</span> Annales officielles</li>
           </ul>
           <a href="app.html" class="btn btn-ghost tarif-cta">Commencer gratuitement</a>
         </div>
 
         <div class="tarif-card tarif-card-pro">
-          <div class="tarif-popular">⭐ Le plus populaire</div>
-          <div class="tarif-name" style="color:var(--gold)">OPJ PRO</div>
+          <div class="tarif-popular">⭐ Recommandé · Plus populaire</div>
+          <div class="tarif-name" style="color:var(--gold)">OPJ PRO — 6 mois</div>
           <div class="tarif-price">
-            <span class="tarif-amount gold" id="price-amount">9,99€</span>
-            <span class="tarif-period" id="price-period">/mois</span>
+            <span class="tarif-amount gold">149€</span>
           </div>
-          <div class="tarif-annual-note" id="annual-note">&nbsp;</div>
+          <div class="tarif-annual-note" style="color:var(--success)">→ Soit 24,83€/mois · Économisez vs mensuel</div>
           <ul class="tarif-features">
-            <li><span class="check">✓</span> <strong>Tout le gratuit</strong></li>
-            <li><span class="check">✓</span> Épreuve 1 complète (DPG + DPS)</li>
-            <li><span class="check">✓</span> Explications juridiques détaillées</li>
-            <li><span class="check">✓</span> QCM illimités + annales</li>
-            <li><span class="check">✓</span> 40+ infractions (7 éléments)</li>
-            <li><span class="check">✓</span> Toutes les cartouches + construction</li>
-            <li><span class="check">✓</span> 7 simulations compte rendu</li>
+            <li><span class="check">✓</span> <strong>7 jours d'essai complet gratuit</strong></li>
+            <li><span class="check">✓</span> EP1 complète — 150 questions DPG + DPS</li>
+            <li><span class="check">✓</span> Explications sur chaque choix (modèle UWorld)</li>
+            <li><span class="check">✓</span> Annales officielles dédiées</li>
+            <li><span class="check">✓</span> Mode Examen complet (EP1+EP2 · 3h)</li>
+            <li><span class="check">✓</span> 42 infractions · 8 cartouches · 7 comptes rendus</li>
             <li><span class="check">✓</span> Score /120 + alertes éliminatoires</li>
+            <li><span class="check">✓</span> <strong>Garantie réussite</strong> — accès renouvelé si échec</li>
           </ul>
-          <a href="app.html" class="btn btn-primary tarif-cta" style="animation: goldPulse 3s ease-in-out infinite;">Commencer l'essai gratuit →</a>
+          <a href="app.html" class="btn btn-primary tarif-cta" style="animation: goldPulse 3s ease-in-out infinite;">Démarrer 7 jours gratuits →</a>
+          <p style="text-align:center;font-size:0.75rem;color:var(--text-3);margin-top:8px">Sans carte bancaire · Annulable à tout moment</p>
         </div>
 
         <div class="tarif-card">
-          <div class="tarif-name">Coup de feu · 30 jours</div>
+          <div class="tarif-name">Coup de feu</div>
           <div class="tarif-price">
-            <span class="tarif-amount">14,99€</span>
+            <span class="tarif-amount">49€</span>
           </div>
-          <div class="tarif-annual-note" style="color:var(--text-3)">Accès unique 30 jours</div>
+          <div class="tarif-annual-note" style="color:var(--text-3)">30 jours · Accès unique</div>
           <ul class="tarif-features">
             <li><span class="check">✓</span> Accès PRO complet 30 jours</li>
             <li><span class="check">✓</span> Idéal dernière ligne droite</li>
-            <li><span class="check">✓</span> Paiement unique, sans abonnement</li>
+            <li><span class="check">✓</span> Paiement unique — pas d'abonnement</li>
             <li><span class="check">✓</span> Toutes les features PRO</li>
             <li><span class="check">✓</span> Mode examen intensif</li>
           </ul>
@@ -1128,9 +1152,18 @@
         </div>
       </div>
 
+      <!-- Garantie réussite -->
+      <div class="garantie-banner reveal">
+        <div class="garantie-icon">🏆</div>
+        <div>
+          <p class="garantie-title">Garantie réussite</p>
+          <p class="garantie-sub">Si tu rates l'examen malgré une utilisation sérieuse de l'app (50+ sessions), nous renouvellons ton accès gratuitement pour la session suivante. Parce que ta réussite est notre priorité.</p>
+        </div>
+      </div>
+
       <p class="tarif-ref reveal">
-        <strong>Prépa physique Sup'Admission :</strong> 5 500 à 7 900 €/an · <strong>Fiches La Baule :</strong> 188 € (papier, sans interactivité)<br>
-        OPJ PRO annuel : <strong>59,99 €</strong> · Satisfait ou remboursé 14 jours · 7 jours d'essai gratuit · Annulable à tout moment
+        <strong>Prépa physique Sup'Admission :</strong> 5 500–7 900 €/an · <strong>Fiches La Baule :</strong> 188 € (papier, sans interactivité)<br>
+        OPJ PRO 6 mois : <strong>149 €</strong> · Reverse trial 7 jours · Garantie réussite · Satisfait ou remboursé 14 jours
       </p>
     </div>
   </section>
