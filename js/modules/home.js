@@ -367,6 +367,34 @@ function renderEpreuvesSection() {
 }
 
 /**
+ * Rendu section "Outils complémentaires".
+ */
+function renderToolsSection() {
+  const tools = [
+    { route: 'flashcards', icon: '🃏', label: 'Flashcards', desc: 'Répétition espacée SM-2' },
+    { route: 'cas-pratique', icon: '✍️', label: 'Cas pratiques', desc: 'Entraînement écrit' },
+    { route: 'diagnostic', icon: '📊', label: 'Diagnostic', desc: 'Analyse de tes résultats' },
+    { route: 'infractions', icon: '🔍', label: 'Infractions', desc: '42 infractions détaillées' },
+    { route: 'cartouches', icon: '📋', label: 'Cartouches', desc: 'Procédures en actes' },
+    { route: 'compte-rendu', icon: '📝', label: 'Comptes rendus', desc: 'Simulation EP3' }
+  ];
+  return `
+    <section class="home-section home-tools-section">
+      <h2 class="home-section-title">Tous les outils</h2>
+      <div class="home-tools-grid">
+        ${tools.map(t => `
+          <button type="button" class="home-tool-btn card card-interactive" data-route="${t.route}">
+            <span class="home-tool-icon">${t.icon}</span>
+            <span class="home-tool-label">${t.label}</span>
+            <span class="home-tool-desc">${t.desc}</span>
+          </button>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+/**
  * Rendu principal : injecte l'écran d'accueil dans le conteneur.
  * @param {HTMLElement} container - #screen-container
  */
@@ -379,6 +407,7 @@ function render(container) {
         ${renderQuickStats()}
         ${renderTodaySection()}
         ${renderEpreuvesSection()}
+        ${renderToolsSection()}
       </div>
     </div>
   `;

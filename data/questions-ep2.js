@@ -2236,5 +2236,475 @@ window.QUESTIONS_EP2 = [
     article: null,
     trap: null,
     isPro: false
+  },
+
+  /* ── EP2 PP — Complément 125→150 ── */
+  {
+    id: "ep2_pp_125",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "L'audition libre (art. 61-1 CPP) d'une personne soupçonnée exige de lui notifier :",
+    answers: [
+      "La qualification des faits reprochés, le droit de garder le silence et le droit à un avocat",
+      "Uniquement son droit de garder le silence",
+      "Aucune notification si elle n'est que suspectée",
+      "Les mêmes droits qu'en garde à vue (6 droits)"
+    ],
+    correct: 0,
+    explanation: "Art. 61-1 CPP : lors d'une audition libre, si la personne est soupçonnée d'avoir commis l'infraction, l'OPJ doit lui notifier : la qualification des faits, le droit de quitter les locaux, le droit de garder le silence, et le droit à l'assistance d'un avocat. Droits allégés par rapport à la GAV.",
+    article: "Art. 61-1 CPP",
+    trap: "Les droits en audition libre sont MOINS nombreux qu'en GAV (pas de médecin, pas de prévenance d'un proche).",
+    isPro: false
+  },
+  {
+    id: "ep2_pp_126",
+    epreuve: 2,
+    module: "PP_GAV",
+    difficulty: 2,
+    question: "Le registre de garde à vue est :",
+    answers: [
+      "Un document tenu dans chaque service, soumis au contrôle du PR et de la chambre de l'instruction, mentionnant toutes les GAV effectuées",
+      "Un formulaire remis à chaque gardé à vue pour signer la notification de ses droits",
+      "Le PV d'audition rédigé par l'OPJ",
+      "Un fichier informatique centralisé au niveau national"
+    ],
+    correct: 0,
+    explanation: "Art. 65 CPP : dans chaque local de police ou de gendarmerie susceptible de recevoir des personnes en GAV, il est tenu un registre spécial de la GAV. Il est soumis au contrôle du PR, du bâtonnier et de la chambre de l'instruction.",
+    article: "Art. 65 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_127",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 1,
+    question: "La durée maximale d'une enquête de flagrance est de :",
+    answers: [
+      "8 jours, renouvelable une fois de 8 jours supplémentaires pour les crimes et délits en bande organisée",
+      "24 heures seulement",
+      "30 jours sans limitation",
+      "72 heures selon les infractions"
+    ],
+    correct: 0,
+    explanation: "Art. 53 al. 2 CPP : l'enquête de flagrance dure 8 jours. Pour les crimes et délits punis d'au moins 5 ans commis en bande organisée, le PR peut autoriser une prolongation de 8 jours supplémentaires. Soit 16 jours maximum.",
+    article: "Art. 53 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_128",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "En enquête préliminaire, la réquisition aux fins d'accès aux données de localisation en temps réel d'un téléphone requiert :",
+    answers: [
+      "L'autorisation du JLD (juge des libertés et de la détention)",
+      "La simple réquisition de l'OPJ sans autorisation judiciaire",
+      "L'autorisation du Procureur de la République suffit",
+      "L'autorisation du juge d'instruction uniquement"
+    ],
+    correct: 0,
+    explanation: "La géolocalisation en temps réel est une mesure intrusive. En enquête préliminaire, elle nécessite l'autorisation du JLD (art. 230-32 et s. CPP). En flagrance, le PR peut l'autoriser pour 15 jours maximum.",
+    article: "Art. 230-32 CPP",
+    trap: "Données de connexion historiques (passées) = réquisition directe. Données en temps réel = JLD requis.",
+    isPro: false
+  },
+  {
+    id: "ep2_pp_129",
+    epreuve: 2,
+    module: "PP_Instruction",
+    difficulty: 2,
+    question: "Le juge d'instruction peut décerner les mandats suivants :",
+    answers: [
+      "Mandat de comparution, mandat d'amener, mandat de dépôt, mandat d'arrêt",
+      "Mandat de comparution et mandat d'arrêt uniquement",
+      "Mandat de dépôt et mandat d'arrêt seulement",
+      "Uniquement le mandat de comparution (les autres sont réservés au tribunal)"
+    ],
+    correct: 0,
+    explanation: "Art. 122 CPP : le JI peut décerner 4 types de mandats : mandat de comparution (enjoindre de venir), mandat d'amener (conduire devant le JI), mandat de dépôt (incarcération jusqu'à comparution), mandat d'arrêt (rechercher et incarcérer si en fuite).",
+    article: "Art. 122 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_130",
+    epreuve: 2,
+    module: "PP_Jugement",
+    difficulty: 1,
+    question: "La composition pénale est une alternative aux poursuites permettant au PR de proposer :",
+    answers: [
+      "Des mesures comme une amende, un stage ou une obligation de soins sans jugement, sous réserve d'accord de l'auteur",
+      "Une peine d'emprisonnement ferme sans audience",
+      "Une mise à l'épreuve sans aucune obligation",
+      "Un renvoi devant la juridiction civile pour réparation"
+    ],
+    correct: 0,
+    explanation: "Art. 41-2 CPP : la composition pénale permet au PR de proposer à l'auteur d'un délit (ou contravention C5) des mesures alternatives aux poursuites (amende, stage, TIG...). L'auteur doit accepter, et la mesure est validée par un juge du siège. Si réalisée = extinction de l'action publique.",
+    article: "Art. 41-2 CPP",
+    trap: "Composition pénale ≠ CRPC. La CP est proposée AVANT les poursuites ; la CRPC intervient après saisine du tribunal.",
+    isPro: false
+  },
+  {
+    id: "ep2_pp_131",
+    epreuve: 2,
+    module: "PP_GAV",
+    difficulty: 3,
+    question: "La prolongation d'une GAV de droit commun (2e tranche de 24h) nécessite :",
+    answers: [
+      "L'autorisation écrite ou verbale du PR, et l'infraction doit être punie d'au moins 1 an d'emprisonnement",
+      "La présentation de la personne au JLD uniquement",
+      "Un accord de la personne gardée à vue",
+      "L'avis favorable de l'avocat de la personne"
+    ],
+    correct: 0,
+    explanation: "Art. 63 al. 2 CPP : la prolongation de 24h en droit commun nécessite l'autorisation du Procureur de la République (écrite ou verbale avec mise à jour du PV). La personne doit si possible être présentée au PR. Condition : infraction punie d'au moins 1 an.",
+    article: "Art. 63 CPP",
+    trap: "Pour le régime dérogatoire (96h), c'est le JLD qui autorise les prolongations, pas le PR.",
+    isPro: false
+  },
+  {
+    id: "ep2_pp_132",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "La nullité d'un acte de procédure peut être soulevée :",
+    answers: [
+      "Devant la chambre de l'instruction, ou au plus tard avant tout jugement au fond (incident de procédure)",
+      "À tout moment, y compris après une condamnation définitive",
+      "Uniquement par le prévenu lors de la première comparution",
+      "Seulement par le procureur si l'acte nul lui est défavorable"
+    ],
+    correct: 0,
+    explanation: "Les nullités doivent être soulevées avant tout jugement au fond (art. 174 et 385 CPP). Devant la chambre de l'instruction pour les actes d'instruction, ou lors de l'audience correctionnelle avant la discussion au fond. Sinon, elles sont purgées par le jugement.",
+    article: "Art. 174 et 385 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_133",
+    epreuve: 2,
+    module: "PP_Instruction",
+    difficulty: 2,
+    question: "L'ordonnance de non-lieu rendue par le juge d'instruction a pour effet :",
+    answers: [
+      "D'interrompre les poursuites et de libérer le mis en examen ; de nouvelles poursuites ne sont possibles que sur charges nouvelles",
+      "De condamner définitivement le mis en examen à une peine légère",
+      "De renvoyer l'affaire devant la juridiction civile",
+      "De clore l'instruction sans décision, laissant le dossier en suspens"
+    ],
+    correct: 0,
+    explanation: "Art. 177 CPP : l'ordonnance de non-lieu intervient quand les charges sont insuffisantes. Le mis en examen est libéré (s'il était en détention), les poursuites cessent. Un nouveau non-lieu est opposable sauf 'charges nouvelles' révélées postérieurement.",
+    article: "Art. 177 CPP",
+    trap: "Non-lieu ≠ acquittement. L'acquittement est prononcé par la cour d'assises après un procès. Le non-lieu est rendu par le JI avant procès.",
+    isPro: false
+  },
+  {
+    id: "ep2_pp_134",
+    epreuve: 2,
+    module: "PP_Jugement",
+    difficulty: 2,
+    question: "La partie civile peut déclencher les poursuites par :",
+    answers: [
+      "Une plainte avec constitution de partie civile (CPC) déposée devant le juge d'instruction",
+      "Une simple plainte auprès de l'OPJ",
+      "Un appel directement à la chambre de l'instruction",
+      "Une requête directe au Procureur Général"
+    ],
+    correct: 0,
+    explanation: "La victime peut mettre en mouvement l'action publique directement par une plainte avec CPC devant le JI, même si le PR a classé sans suite. Condition : avoir attendu 3 mois sans décision du PR, ou avoir signalé les faits au PR. Ce mécanisme permet de contourner le classement sans suite.",
+    article: "Art. 85 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_135",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 3,
+    question: "En cas de mort suspecte, l'autopsie médicolégale est :",
+    answers: [
+      "Ordonnée par le Procureur de la République (art. 74 al. 2 CPP) ; elle est de droit si la mort est violente ou suspecte",
+      "Ordonnée uniquement par le juge d'instruction",
+      "Optionnelle, laissée à l'appréciation du médecin légiste",
+      "Effectuée automatiquement sans ordre judiciaire en cas de mort violente"
+    ],
+    correct: 0,
+    explanation: "Art. 74 al. 2 CPP : lorsqu'une personne est décédée dans des circonstances violentes ou suspectes, le PR peut ordonner une autopsie médicolégale. Si le PR ouvre une information judiciaire, c'est le JI qui ordonne l'autopsie.",
+    article: "Art. 74 CPP",
+    trap: "L'autopsie ne peut être réalisée sans décision judiciaire (PR ou JI). L'OPJ ne peut pas l'ordonner de lui-même.",
+    isPro: false
+  },
+  {
+    id: "ep2_pp_136",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "L'OPJ peut-il retarder l'accès de l'avocat en GAV droit commun ?",
+    answers: [
+      "Oui, jusqu'à 24h sur décision du PR si la nature des infractions ou les circonstances de l'enquête le justifient",
+      "Non, l'avocat intervient toujours dès la 1ère heure sans exception",
+      "Oui, jusqu'à 48h pour n'importe quelle infraction",
+      "L'OPJ décide seul du délai selon l'urgence de l'enquête"
+    ],
+    correct: 0,
+    explanation: "En droit commun, l'accès à l'avocat est immédiat (1re heure). Il peut être différé jusqu'à 24h sur décision du PR si la nature ou les circonstances de l'infraction l'exigent (art. 63-4-2 CPP). Pour crime organisé : différé possible jusqu'à 48h (JLD ou JI).",
+    article: "Art. 63-4-2 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_137",
+    epreuve: 2,
+    module: "PP_Jugement",
+    difficulty: 1,
+    question: "Le délai de prescription de l'action publique pour un délit depuis 2017 est de :",
+    answers: [
+      "6 ans",
+      "3 ans",
+      "10 ans",
+      "1 an"
+    ],
+    correct: 0,
+    explanation: "Depuis la loi du 27 février 2017 (n° 2017-242) : délais allongés — crimes : 20 ans, délits : 6 ans (avant : 3 ans), contraventions : 1 an. Crimes imprescriptibles : crimes contre l'humanité.",
+    article: "Art. 7 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_138",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "En enquête de flagrance, l'OPJ peut retenir une personne pour vérification d'identité pendant :",
+    answers: [
+      "4 heures maximum (art. 78-3 CPP)",
+      "24 heures",
+      "2 heures seulement",
+      "Jusqu'à la fin de l'enquête de flagrance"
+    ],
+    correct: 0,
+    explanation: "Art. 78-3 CPP : si une personne refuse ou se trouve dans l'impossibilité de justifier de son identité, l'OPJ peut la retenir sur place ou dans les locaux de police pendant le temps strictement nécessaire à la vérification et au maximum 4 heures.",
+    article: "Art. 78-3 CPP",
+    trap: "Pour un mineur de moins de 13 ans, la rétention est limitée à 2 heures.",
+    isPro: false
+  },
+  {
+    id: "ep2_pp_139",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "La perquisition en enquête de flagrance peut avoir lieu :",
+    answers: [
+      "De 6h à 21h (ou au-delà si commencée avant 21h), avec présence d'un témoin requis",
+      "À toute heure du jour ou de la nuit sans restriction",
+      "Uniquement de 8h à 20h selon les règles sanitaires",
+      "Uniquement si le mis en cause est présent dans les lieux"
+    ],
+    correct: 0,
+    explanation: "Art. 59 CPP : les perquisitions et visites domiciliaires ne peuvent débuter avant 6h ou après 21h, sauf urgence (crime ou délit en bande organisée, terrorisme, stupéfiants). Si commencée avant 21h, elle peut se poursuivre au-delà. Présence d'un témoin (non suspect) requise.",
+    article: "Art. 59 CPP",
+    trap: "Exception : pour le crime organisé et le terrorisme, perquisition possible de nuit sur autorisation du JLD.",
+    isPro: false
+  },
+  {
+    id: "ep2_pp_140",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 3,
+    question: "Le repentant ou 'collaborateur de justice' bénéficie de :",
+    answers: [
+      "Une réduction de peine pouvant aller jusqu'à la moitié, voire aux deux tiers, s'il a permis de faire cesser l'infraction ou d'identifier les autres auteurs",
+      "Une immunité totale et définitive en échange de ses déclarations",
+      "Une simple circonstance atténuante laissée à l'appréciation du juge",
+      "Un régime d'exécution de peine aménagée en établissement ordinaire"
+    ],
+    correct: 0,
+    explanation: "Art. 132-78 CP : la personne qui a alerté les autorités ou permis de faire cesser l'infraction ou d'identifier les autres participants peut bénéficier d'une réduction de peine (moitié) ou d'une exemption de peine selon les cas. C'est le régime du 'repentant' notamment utilisé en matière de crime organisé.",
+    article: "Art. 132-78 CP",
+    trap: null,
+    isPro: true
+  },
+  {
+    id: "ep2_pp_141",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "En matière de criminalité organisée, les écoutes téléphoniques administratives (renseignement) se distinguent des écoutes judiciaires par :",
+    answers: [
+      "Les écoutes administratives ne nécessitent pas d'autorisation judiciaire — elles relèvent du Premier ministre via le GIC",
+      "Les deux nécessitent une autorisation du JI",
+      "Les écoutes administratives sont interdites en France",
+      "Les écoutes judiciaires ne nécessitent pas d'autorisation judiciaire"
+    ],
+    correct: 0,
+    explanation: "Les écoutes administratives (services de renseignement) sont autorisées par le Premier ministre via le Groupement Interministériel de Contrôle (GIC), sous contrôle de la CNCTR (Commission Nationale de Contrôle des Techniques de Renseignement). Elles ne dépendent pas de l'autorité judiciaire.",
+    article: "Code de la sécurité intérieure L. 852-1 et s.",
+    trap: null,
+    isPro: true
+  },
+  {
+    id: "ep2_pp_142",
+    epreuve: 2,
+    module: "PP_Jugement",
+    difficulty: 1,
+    question: "Le ministère public peut interjeter appel d'un jugement correctionnel dans un délai de :",
+    answers: [
+      "10 jours à compter du prononcé du jugement",
+      "30 jours",
+      "2 mois",
+      "5 jours uniquement (délai de cassation)"
+    ],
+    correct: 0,
+    explanation: "Art. 505 CPP : le délai d'appel est de 10 jours pour toutes les parties (prévenu, Ministère public, partie civile). Il court à compter du prononcé du jugement (ou de sa signification pour les jugements rendus par défaut).",
+    article: "Art. 505 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_143",
+    epreuve: 2,
+    module: "PP_Mineurs",
+    difficulty: 2,
+    question: "La 'mesure éducative judiciaire' (MEJ) prévue par le CJPM peut inclure :",
+    answers: [
+      "Un module de réparation, d'insertion ou de santé, selon la situation du mineur",
+      "Uniquement un placement en établissement fermé",
+      "Une peine d'amende pour les parents du mineur",
+      "Une interdiction définitive de fréquenter certains lieux"
+    ],
+    correct: 0,
+    explanation: "Le CJPM introduit la mesure éducative judiciaire (MEJ), qui remplace les anciennes mesures éducatives. Elle peut comprendre un module de réparation, d'insertion professionnelle, de santé ou de placement. Elle est prononcée par le juge des enfants et suivie par la PJJ.",
+    article: "Art. L. 112-2 CJPM",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_144",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "La réquisition aux opérateurs téléphoniques pour les données d'identification d'abonnés :",
+    answers: [
+      "Ne nécessite pas d'autorisation judiciaire préalable — l'OPJ peut y procéder directement (art. 60-1 CPP)",
+      "Nécessite l'autorisation du JLD",
+      "Est interdite sans accord de la personne concernée",
+      "Nécessite toujours l'autorisation du Procureur de la République"
+    ],
+    correct: 0,
+    explanation: "Art. 60-1 et 77-1-1 CPP : l'OPJ peut requérir directement de toute personne (y compris les opérateurs téléphoniques) la communication des données utiles à l'enquête, notamment les données d'identification (nom, adresse, coordonnées d'abonné). Sans autorisation judiciaire préalable pour ces données basiques.",
+    article: "Art. 60-1 CPP",
+    trap: "Les données de CONTENU (messages, emails) et de localisation en temps réel nécessitent une autorisation judiciaire (JLD ou JI).",
+    isPro: false
+  },
+  {
+    id: "ep2_pp_145",
+    epreuve: 2,
+    module: "PP_GAV",
+    difficulty: 2,
+    question: "Peut-on placer en garde à vue une personne déjà libre et non soupçonnée d'une infraction ?",
+    answers: [
+      "Non, la GAV nécessite des raisons plausibles de soupçonner que la personne a commis ou tenté de commettre une infraction",
+      "Oui, pour toute personne dont l'audition est utile à l'enquête",
+      "Oui, si le procureur l'autorise pour recueillir un témoignage crucial",
+      "Non seulement les suspects, mais aussi les témoins peuvent être placés en GAV"
+    ],
+    correct: 0,
+    explanation: "Art. 62-2 CPP : la GAV ne peut concerner que la personne à l'égard de laquelle il existe une ou plusieurs raisons plausibles de soupçonner qu'elle a commis ou tenté de commettre un crime ou un délit puni d'emprisonnement. Un simple témoin ne peut pas être placé en GAV.",
+    article: "Art. 62-2 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_146",
+    epreuve: 2,
+    module: "PP_Instruction",
+    difficulty: 2,
+    question: "Quelle est la durée maximale de détention provisoire en matière délictuelle ?",
+    answers: [
+      "4 mois renouvelable, avec un maximum variant de 2 à 4 ans selon la gravité de l'infraction",
+      "6 mois non renouvelable",
+      "1 an non renouvelable",
+      "2 ans dans tous les cas"
+    ],
+    correct: 0,
+    explanation: "Art. 145-1 CPP : durée de base en matière délictuelle = 4 mois renouvelable. Le maximum varie selon la peine : 1 an pour délits ≤ 5 ans, 2 ans pour délits > 5 ans, 4 ans pour bande organisée/trafic de stupéfiants. Plus long que prévu en matière criminelle.",
+    article: "Art. 145-1 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_147",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 3,
+    question: "Le régime des 'techniques spéciales d'enquête' (TSE) en matière de crime organisé inclut :",
+    answers: [
+      "La sonorisation, la captation d'images, l'infiltration, la géolocalisation et les interceptions, avec autorisation judiciaire",
+      "Uniquement les écoutes téléphoniques et la surveillance de comptes bancaires",
+      "Toutes ces techniques sans autorisation judiciaire en cas d'urgence",
+      "Uniquement sur autorisation du Ministre de l'Intérieur"
+    ],
+    correct: 0,
+    explanation: "Art. 706-96 et s. CPP : les TSE (sonorisations, captation d'images, infiltration, géolocalisation, interceptions) sont applicables en matière de crime organisé et de terrorisme. Elles nécessitent une autorisation du JI (ou JLD en enquête). Durée et modalités encadrées.",
+    article: "Art. 706-96 CPP",
+    trap: null,
+    isPro: true
+  },
+  {
+    id: "ep2_pp_148",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 1,
+    question: "En enquête de flagrance, l'OPJ doit informer le Procureur de la République :",
+    answers: [
+      "Immédiatement, dès l'ouverture de la flagrance (art. 54 CPP)",
+      "Dans les 24 heures suivant le début de la flagrance",
+      "Uniquement si une GAV est nécessaire",
+      "À la clôture de l'enquête de flagrance"
+    ],
+    correct: 0,
+    explanation: "Art. 54 CPP : l'OPJ qui constate un crime ou un délit flagrant en avise immédiatement le Procureur de la République. Cette information sans délai est une obligation légale permettant au PR de diriger la procédure dès le début.",
+    article: "Art. 54 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_149",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "Le PV d'audition d'un gardé à vue doit mentionner :",
+    answers: [
+      "L'heure de début et de fin, les droits notifiés, les questions posées et les réponses données, les demandes de l'avocat",
+      "Uniquement les aveux ou déclarations spontanées de la personne",
+      "La qualification des faits et la peine encourrue, mais pas les questions",
+      "Seulement l'identité de la personne et l'heure du placement en GAV"
+    ],
+    correct: 0,
+    explanation: "Le PV d'audition en GAV est un acte formel. Il doit mentionner : l'heure de début et de fin, les droits notifiés, les questions posées par l'OPJ, les réponses (ou le silence) de la personne, les demandes de l'avocat si présent. Il est signé par la personne ou mention est faite de son refus.",
+    article: "Art. 63-4-3 CPP",
+    trap: null,
+    isPro: false
+  },
+  {
+    id: "ep2_pp_150",
+    epreuve: 2,
+    module: "PP_Procédure",
+    difficulty: 2,
+    question: "Qu'est-ce qu'un 'scellé' en procédure pénale ?",
+    answers: [
+      "Un objet saisi et mis sous emballage cacheté pour garantir l'intégrité de la preuve jusqu'au procès",
+      "Un document confidentiel remis au JI",
+      "Un ordre de saisie délivré par le juge",
+      "La signature manuscrite de l'OPJ sur le PV de saisie"
+    ],
+    correct: 0,
+    explanation: "Le scellé est le conditionnement d'un objet saisi (emballage cacheté, signé, numéroté) pour garantir l'intégrité de la preuve. Toute violation ou modification du scellé compromet la valeur probatoire de l'objet. Les scellés sont conservés au greffe ou au local des scellés.",
+    article: "Art. 97 et 706-154 CPP",
+    trap: null,
+    isPro: false
   }
 ];
