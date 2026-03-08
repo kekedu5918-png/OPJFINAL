@@ -51,11 +51,12 @@ function canAccessEp1() {
   return !LIMITS.ep1Locked;
 }
 
-/** Accès à une leçon par id/slug */
+/** Accès à une leçon par id/slug — comparaison exacte pour éviter substr match */
 function canAccessLesson(lessonId) {
   if (isPro()) return true;
   const allowed = LIMITS.lessonsAvailable || [];
-  return allowed.some((id) => (lessonId || '').toLowerCase().includes(id));
+  const id = (lessonId || '').toLowerCase();
+  return allowed.some((allowedId) => id === allowedId.toLowerCase());
 }
 
 /** Accès aux explications après QCM */
@@ -95,11 +96,13 @@ function canAccessCompteRendu() {
   return getCompteRenduCount() < LIMITS.compteRenduMax;
 }
 
-/** Flashcards consultées aujourd'hui (approximation par infractions sm2 avec due aujourd'hui) */
+/** Flashcards révisées AUJOURD'HUI — on vérifie que la date de révision est today */
 function getFlashcardsUsedToday() {
+  // Les clés fc_* (flashcards générales) stockent lastReviewed si on le track
+  // En pratique, on stocke la date dans v.lastReviewed après chaque révision SM-2
   const sm2 = window.AppState.getState('progress.infractions.sm2') || {};
   const today = getToday();
-  return Object.values(sm2).filter((v) => v && v.due <= today).length;
+  return Object.values(sm2).filter((v) => v && v.lastReviewed === today).length;
 }
 function canAccessFlashcards() {
   if (isPro()) return true;

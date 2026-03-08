@@ -945,3 +945,31 @@
 .notif-prompt-sub { font-size: var(--fs-sm); color: var(--c-text-muted); text-align: center; }
 .notif-prompt-benefits { display: flex; flex-direction: column; gap: var(--s-2); background: var(--c-bg-overlay); border-radius: var(--r-lg); padding: var(--s-3); }
 .notif-benefit { font-size: var(--fs-sm); color: var(--c-text-secondary); }
+
+/* ═══════════════════════════════════════════════════════
+   QCM — Modal quit (remplace confirm() natif)
+═══════════════════════════════════════════════════════ */
+.qcm-quit-modal {
+  position: fixed;
+  inset: 0;
+  background: var(--c-overlay-dark);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.qcm-quit-modal.qcm-quit-visible { opacity: 1; }
+.qcm-quit-inner {
+  background: var(--c-bg-raised);
+  border: 1px solid var(--c-border-mid);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding: var(--s-6) var(--s-5) calc(var(--s-6) + env(safe-area-inset-bottom, 0));
+  width: 100%;
+  transform: translateY(100%);
+  transition: transform 0.3s var(--ease-spring);
+}
+.qcm-quit-visible .qcm-quit-inner { transform: translateY(0); }
+.qcm-quit-title { font-family: 'Syne', sans-serif; font-size: var(--fs-lg); font-weight: 800; color: var(--c-text-primary); margin-bottom: var(--s-1); text-align: center; }
+.qcm-quit-sub { font-size: var(--fs-sm); color: var(--c-text-muted); text-align: center; margin-bottom: var(--s-5); }
+.qcm-quit-actions { display: flex; flex-direction: column; gap: var(--s-2); }

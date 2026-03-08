@@ -57,33 +57,37 @@ function renderSparkline(sessions, width, height) {
     return `<div class="diag-no-data">Pas assez de données</div>`;
   }
   const scores = sessions.slice(-15).map(s => s.score ?? (s.correct / Math.max(1, s.total)) * 20);
-  const minS = Math.min(...scores);
-  const maxS = Math.max(...scores, 20);
+  // Y-axis: utilise minS pour zoomer si les scores sont élevés (ex: 15-18 → axe 12-20)
+  const rawMin = Math.min(...scores);
+  const rawMax = Math.max(...scores);
+  const yMin = Math.max(0, Math.floor(rawMin - 2));  // 2 points sous le minimum
+  const yMax = Math.min(20, Math.ceil(rawMax + 1));   // 1 point au-dessus du max (min 20)
+  const yRange = Math.max(yMax - yMin, 5);            // au moins 5 points de range
   const w = width || 280;
   const h = height || 80;
   const pad = 8;
   const aw = w - pad * 2;
   const ah = h - pad * 2;
 
+  const toY = (s) => pad + ah - ((s - yMin) / yRange) * ah;
+
   const points = scores.map((s, i) => {
-    const x = pad + (i / (scores.length - 1)) * aw;
-    const y = pad + ah - ((s - 0) / (20 - 0)) * ah;
-    return `${x},${y}`;
+    const x = pad + (i / Math.max(scores.length - 1, 1)) * aw;
+    return `${x},${toY(s)}`;
   }).join(' ');
 
   const areaPoints = [
     `${pad},${pad + ah}`,
     ...scores.map((s, i) => {
-      const x = pad + (i / (scores.length - 1)) * aw;
-      const y = pad + ah - ((s - 0) / (20 - 0)) * ah;
-      return `${x},${y}`;
+      const x = pad + (i / Math.max(scores.length - 1, 1)) * aw;
+      return `${x},${toY(s)}`;
     }),
     `${pad + aw},${pad + ah}`
   ].join(' ');
 
   const lastScore = scores[scores.length - 1];
   const lastX = pad + aw;
-  const lastY = pad + ah - ((lastScore) / 20) * ah;
+  const lastY = toY(lastScore);
 
   return `
     <svg viewBox="0 0 ${w} ${h}" class="diag-sparkline">
@@ -93,7 +97,7 @@ function renderSparkline(sessions, width, height) {
           <stop offset="100%" stop-color="var(--c-gold)" stop-opacity="0"/>
         </linearGradient>
       </defs>
-      <line x1="${pad}" y1="${pad + ah * (1 - 14/20)}" x2="${pad + aw}" y2="${pad + ah * (1 - 14/20)}" stroke="var(--c-success)" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
+      ${yMin <= 14 && yMax >= 10 ? `<line x1="${pad}" y1="${toY(14)}" x2="${pad + aw}" y2="${toY(14)}" stroke="var(--c-success)" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>` : ''}
       <polygon points="${areaPoints}" fill="url(#sparkGrad)"/>
       <polyline points="${points}" fill="none" stroke="var(--c-gold)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
       <circle cx="${lastX}" cy="${lastY}" r="4" fill="var(--c-gold)"/>
@@ -161,7 +165,7 @@ function render(container) {
   const trendIcon = (t) => t === 'up' ? '📈' : t === 'down' ? '📉' : t === 'stable' ? '➡️' : '';
 
   // État vide : pas encore assez de données
-  if (totalSessions < 3 && ep1Score === null && ep2Score === null) {
+  if (totalSessions < 5 && ep1Score === null && ep2Score === null) {
     container.innerHTML = `
       <div class="diag-screen">
         <div class="diag-header">

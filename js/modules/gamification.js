@@ -16,16 +16,16 @@ const BADGES_CONFIG = [
   { id: 'lesson_first', icon: '📖', label: 'Premier cours', desc: 'Complète ta première leçon', condition: s => (s.progress.lessons.completed || []).length >= 1 },
   { id: 'lessons_all_dpg', icon: '📚', label: 'DPG Maîtrisé', desc: 'Toutes les leçons DPG complétées', condition: s => {
     const dpg = window.LESSONS_DPG || [];
-    return dpg.length > 0 && dpg.every(l => (s.progress.lessons.completed || []).includes(l.id));
+    return dpg.length > 0 && dpg.every(l => ((s.progress?.lessons?.completed) || []).includes(l.id));
   }},
   { id: 'perfect_session', icon: '🏆', label: 'Session parfaite', desc: 'Obtiens 20/20 dans une session', condition: () => false }, // Débloqué via QCM
   { id: 'combo_10', icon: '⚡', label: 'Combo ×10', desc: '10 bonnes réponses de suite', condition: () => false }, // Via QCM
   { id: 'infractions_all', icon: '🔍', label: 'Expert Infractions', desc: 'Maîtriser toutes les infractions', condition: s => {
     const inf = window.INFRACTIONS || [];
-    const sm2 = s.progress.infractions.sm2 || {};
+    const sm2 = (s.progress?.infractions?.sm2) || {};
     return inf.length > 0 && inf.every(i => sm2[`${i.id}_0`]);
   }},
-  { id: 'cas_pratique_1', icon: '✍️', label: 'Premier cas', desc: 'Traite ton premier cas pratique', condition: s => (s.progress.casePratiques.submitted || []).length >= 1 }
+  { id: 'cas_pratique_1', icon: '✍️', label: 'Premier cas', desc: 'Traite ton premier cas pratique', condition: s => ((s.progress?.casePratiques?.submitted) || []).length >= 1 }
 ];
 
 /**

@@ -306,8 +306,9 @@ function renderLesson(container, params) {
     </div>
   `;
 
+  // Retour vers la liste du module (pas le catalogue global)
   container.querySelector('[data-lesson-back]')?.addEventListener('click', () => {
-    window.Router.navigate(`#learn`, { direction: 'back' });
+    window.Router.navigate(`#lesson/${moduleId}`, { direction: 'back' });
   });
 
   container.querySelectorAll('[data-quiz-reveal]').forEach(btn => {
@@ -326,7 +327,10 @@ function renderLesson(container, params) {
     completeBtn.addEventListener('click', () => {
       window.AppState.dispatch('COMPLETE_LESSON', { id: lesson.id });
       window.AppState.dispatch('ADD_XP', { amount: 30 });
-      window.AppState.dispatch('INCREMENT_STREAK');
+      // Streak : seulement si pas encore incrémenté aujourd'hui via une session QCM
+      const lastStreak = window.AppState.getState('gamification.lastStreakDate');
+      const today = new Date().toISOString().slice(0, 10);
+      if (lastStreak !== today) window.AppState.dispatch('INCREMENT_STREAK');
       completeBtn.closest('.lesson-complete-wrap').innerHTML = `
         <div class="lesson-done-badge anim-fadeup">✓ Leçon terminée · +30 XP</div>
       `;

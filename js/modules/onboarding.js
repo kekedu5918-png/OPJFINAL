@@ -108,7 +108,7 @@ function screen3() {
     <h2 class="onboarding-heading">Quand est ton examen ?</h2>
     <p class="onboarding-step-sub">Je vais adapter ton plan de révision à ta date.</p>
     <input type="date" class="input onboarding-date-input" id="onboarding-exam-date"
-      value="${value}" min="${today}" color-scheme="dark">
+      value="${value}" min="${today}" style="color-scheme:dark">
     ${msg ? `<p class="onboarding-date-message ${msg.className}">${msg.text}</p>` : '<p class="onboarding-date-message onboarding-date-placeholder">← Sélectionne ta date</p>'}
     <p class="onboarding-corps-tip">💡 ${corpsTip}</p>
     <div class="onboarding-cta-wrap">
