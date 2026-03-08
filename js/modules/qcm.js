@@ -37,6 +37,7 @@ function filterQuestions(filters) {
   if (filters.epreuve === 'ep1_dpg') list = list.filter((q) => q.epreuve === 1 && (q.module || '').includes('DPG'));
   else if (filters.epreuve === 'ep1_dps') list = list.filter((q) => q.epreuve === 1 && (q.module || '').includes('DPS'));
   else if (filters.epreuve === 'ep2_pp') list = list.filter((q) => q.epreuve === 2);
+  else if (filters.epreuve === 'annales') list = list.filter((q) => q.isAnnale === true);
   else if (filters.epreuve === 'complet') list = list;
   if (filters.difficulty && filters.difficulty !== 'all') list = list.filter((q) => q.difficulty === filters.difficulty);
   const shuffled = list.slice();
@@ -129,10 +130,11 @@ function renderSelector(container) {
 
   const epreuveLabels = [
     { value: 'all', label: 'Tout' },
-    { value: 'ep1_dpg', label: 'Ep1 DPG' },
-    { value: 'ep1_dps', label: 'Ep1 DPS' },
-    { value: 'ep2_pp', label: 'Ep2 PP' },
-    { value: 'complet', label: 'Complet' }
+    { value: 'ep2_pp', label: 'EP2 PP' },
+    { value: 'ep1_dpg', label: 'EP1 DPG', proOnly: true },
+    { value: 'ep1_dps', label: 'EP1 DPS', proOnly: true },
+    { value: 'annales', label: '📋 Annales', special: true },
+    { value: 'complet', label: 'Complet', proOnly: true }
   ];
   const diffLabels = [
     { value: 'all', label: 'Tout' },
@@ -148,7 +150,11 @@ function renderSelector(container) {
       <div class="qcm-filters">
         <p class="qcm-filter-label">Épreuve</p>
         <div class="qcm-filter-row">
-          ${epreuveLabels.map((o) => `<button type="button" class="card card-interactive qcm-filter-card ${filters.epreuve === o.value ? 'card-gold' : ''}" data-qcm-epreuve="${o.value}">${o.label}</button>`).join('')}
+          ${epreuveLabels.map((o) => {
+            const isLocked = o.proOnly && !isPro;
+            const isSelected = filters.epreuve === o.value;
+            return `<button type="button" class="card card-interactive qcm-filter-card ${isSelected ? 'card-gold' : ''} ${o.special ? 'qcm-filter-annale' : ''}" data-qcm-epreuve="${o.value}" ${isLocked ? 'data-qcm-pro="1"' : ''}>${isLocked ? '🔒 ' : ''}${o.label}</button>`;
+          }).join('')}
         </div>
         <p class="qcm-filter-label">Difficulté</p>
         <div class="qcm-filter-row">
@@ -169,6 +175,10 @@ function renderSelector(container) {
 
   container.querySelectorAll('[data-qcm-epreuve]').forEach((el) => {
     el.addEventListener('click', () => {
+      if (el.hasAttribute('data-qcm-pro') && !isPro) {
+        window.Paywall.showModal?.();
+        return;
+      }
       sessionState.filters = { ...sessionState.filters, epreuve: el.getAttribute('data-qcm-epreuve') };
       renderSelector(container);
     });
@@ -442,6 +452,35 @@ function renderResults(container) {
   const showConfetti = score >= 18;
   const dangerEpreuveNum = score < 7 ? (sessionState.questions[0]?.epreuve === 1 ? 1 : 2) : null;
 
+  // ── Breakdown par thème ──
+  const byModule = {};
+  sessionState.answers.forEach((a, i) => {
+    const q = sessionState.questions[i];
+    if (!q) return;
+    const mod = q.module || (q.epreuve === 1 ? 'EP1' : 'EP2');
+    const label = mod.replace(/^EP[12]_/, '').replace(/_/g, ' ');
+    if (!byModule[label]) byModule[label] = { correct: 0, total: 0 };
+    byModule[label].total++;
+    if (a.correct) byModule[label].correct++;
+  });
+  const themeRows = Object.entries(byModule).map(([label, d]) => {
+    const pct = d.total ? Math.round((d.correct / d.total) * 100) : 0;
+    const color = pct >= 70 ? 'var(--c-success)' : pct >= 40 ? 'var(--c-gold)' : 'var(--c-eliminating)';
+    return `
+      <div class="qcm-theme-row">
+        <span class="qcm-theme-label">${label}</span>
+        <div class="qcm-theme-bar-wrap">
+          <div class="qcm-theme-bar" style="width:${pct}%;background:${color}"></div>
+        </div>
+        <span class="qcm-theme-score mono" style="color:${color}">${d.correct}/${d.total}</span>
+      </div>`;
+  }).join('');
+
+  // ── CTA abonnement si 3 sessions et pas PRO ──
+  const sessionsDone = window.AppState.getState('gamification.totalSessions') || 0;
+  const isPro = (window.AppState.getState('pro') || {}).isActive === true;
+  const showUpgradeCta = !isPro && sessionsDone >= 3 && sessionsDone <= 6;
+
   container.innerHTML = `
     <div class="qcm-results-screen">
       <div class="qcm-result-score-wrap ${scoreClass}">
@@ -461,23 +500,52 @@ function renderResults(container) {
         <span>✓ ${correct} correctes</span>
         <span>✗ ${total - correct} incorrectes</span>
       </div>
+
+      ${themeRows ? `
+        <div class="qcm-result-themes">
+          <p class="qcm-result-themes-title">Résultats par thème</p>
+          ${themeRows}
+        </div>
+      ` : ''}
+
       ${wrong.length > 0 ? `
         <div class="qcm-result-failed">
-          <p class="qcm-result-failed-title">Questions ratées</p>
+          <p class="qcm-result-failed-title">À retravailler (${wrong.length})</p>
           <div class="qcm-result-accordion">
             ${wrong.map((a, i) => `
               <div class="qcm-accordion-item">
-                <button type="button" class="qcm-accordion-btn" data-qcm-accordion="${i}">${(a.question?.question || '').slice(0, 50)}…</button>
-                <div class="qcm-accordion-panel" style="display:none;">${a.question?.explanation || ''}</div>
+                <button type="button" class="qcm-accordion-btn" data-qcm-accordion="${i}">
+                  <span class="qcm-accordion-q">${(a.question?.question || '').slice(0, 60)}${(a.question?.question || '').length > 60 ? '…' : ''}</span>
+                </button>
+                <div class="qcm-accordion-panel" style="display:none;">
+                  <p class="qcm-accordion-correct">✓ ${a.question?.answers?.[a.question?.correct] || ''}</p>
+                  <p class="qcm-accordion-expl">${a.question?.explanation || ''}</p>
+                  ${a.question?.article ? `<span class="qcm-accordion-article">📖 ${a.question.article}</span>` : ''}
+                  ${a.question?.trap ? `<div class="qcm-accordion-trap">⚠️ Piège : ${a.question.trap}</div>` : ''}
+                </div>
               </div>
             `).join('')}
           </div>
         </div>
+      ` : `<div class="qcm-result-perfect">🏆 Parfait — aucune erreur !</div>`}
+
+      ${showUpgradeCta ? `
+        <div class="qcm-upgrade-banner" data-route="pro">
+          <div class="qcm-upgrade-inner">
+            <span class="qcm-upgrade-icon">⭐</span>
+            <div>
+              <p class="qcm-upgrade-title">Débloquer EP1 + explications illimitées</p>
+              <p class="qcm-upgrade-sub">7 jours d'essai gratuit · Sans carte bancaire</p>
+            </div>
+            <span class="qcm-upgrade-arrow">→</span>
+          </div>
+        </div>
       ` : ''}
+
       <div class="qcm-result-actions">
         <button type="button" class="btn btn-secondary" data-route="train">🔄 Rejouer</button>
         <button type="button" class="btn btn-ghost" data-qcm-share>📤 Partager</button>
-        <button type="button" class="btn btn-ghost" data-route="home">← Retour</button>
+        <button type="button" class="btn btn-ghost" data-route="diagnostic">📊 Mon diagnostic</button>
       </div>
     </div>
   `;
@@ -516,6 +584,9 @@ function renderResults(container) {
 
   container.querySelectorAll('[data-route]').forEach((el) => {
     el.addEventListener('click', () => window.Router.navigate(`#${el.getAttribute('data-route')}`));
+  });
+  container.querySelector('.qcm-upgrade-banner')?.addEventListener('click', () => {
+    window.Router.navigate('#pro');
   });
   container.querySelectorAll('[data-qcm-accordion]').forEach((btn) => {
     btn.addEventListener('click', () => {
