@@ -687,10 +687,10 @@
     }
     .faq-answer {
       max-height: 0; overflow: hidden;
-      transition: max-height 0.45s var(--ease-smooth), padding 0.3s;
+      /* max-height et padding gérés en JS pour éviter les coupures */
+      transition: max-height 0.4s ease, padding 0.3s ease;
       font-size: 0.9rem; color: var(--text-2); line-height: 1.7;
     }
-    .faq-item.open .faq-answer { max-height: 800px; padding-bottom: 20px; }
 
     /* ══════════════════════════════════
        CTA FINAL
@@ -1265,13 +1265,35 @@
     }
 
     function toggleFaq(btn) {
-      // Remonter jusqu'au .faq-item même si le clic vient du .faq-icon enfant
       const item = btn.closest('.faq-item');
       if (!item) return;
+      const answer = item.querySelector('.faq-answer');
+      if (!answer) return;
       const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
+
+      // Ferme tous les items ouverts avec animation propre
+      document.querySelectorAll('.faq-item.open').forEach(i => {
+        const a = i.querySelector('.faq-answer');
+        if (a) {
+          a.style.maxHeight = a.scrollHeight + 'px'; // fixe la hauteur avant de refermer
+          requestAnimationFrame(() => { a.style.maxHeight = '0'; a.style.paddingBottom = '0'; });
+        }
+        i.classList.remove('open');
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        // Ouvre avec la hauteur réelle du contenu (pas de 800px arbitraire)
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        answer.style.paddingBottom = '20px';
+      }
     }
+
+    // Init FAQ : s'assurer que tous les items sont bien fermés
+    document.querySelectorAll('.faq-answer').forEach(a => {
+      a.style.maxHeight = '0';
+      a.style.paddingBottom = '0';
+    });
   </script>
 
 </body>

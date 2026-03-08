@@ -504,6 +504,14 @@
   padding: var(--s-4) var(--s-4) var(--s-2);
   position: relative;
   z-index: 10;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* La barre de progression prend tout l'espace restant dans le topbar */
+.onboarding-topbar .onboarding-progress {
+  flex: 1;
+  min-width: 0;
 }
 .onboarding-back-btn {
   display: flex;
