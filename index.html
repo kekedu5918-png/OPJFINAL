@@ -658,9 +658,9 @@
     ══════════════════════════════════ */
     .faq { background: var(--bg-raised); }
     .faq-grid { max-width: 720px; margin: 0 auto; }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
     .faq-item {
       border-bottom: 1px solid var(--border);
-      overflow: hidden;
     }
     .faq-question {
       width: 100%; text-align: left;
@@ -687,10 +687,10 @@
     }
     .faq-answer {
       max-height: 0; overflow: hidden;
-      transition: max-height 0.4s var(--ease-smooth), padding 0.3s;
+      transition: max-height 0.45s var(--ease-smooth), padding 0.3s;
       font-size: 0.9rem; color: var(--text-2); line-height: 1.7;
     }
-    .faq-item.open .faq-answer { max-height: 200px; padding-bottom: 20px; }
+    .faq-item.open .faq-answer { max-height: 800px; padding-bottom: 20px; }
 
     /* ══════════════════════════════════
        CTA FINAL
@@ -1140,42 +1140,42 @@
     <div class="container">
       <h2 class="section-title reveal" style="text-align:center;margin-bottom:48px">Questions fréquentes</h2>
       <div class="faq-grid">
-        <div class="faq-item reveal">
+        <div class="faq-item">
           <button class="faq-question" type="button" onclick="toggleFaq(this)">
             C'est quoi exactement la qualification OPJ ?
             <div class="faq-icon">+</div>
           </button>
           <div class="faq-answer">La qualification d'Officier de Police Judiciaire est une habilitation judiciaire qui permet à un policier ou gendarme d'effectuer des actes d'enquête sous le contrôle du parquet. Elle s'obtient par un examen technique (3 épreuves) après 24 mois de service minimum. Les officiers (lieutenants, capitaines...) l'obtiennent automatiquement à leur sortie d'école.</div>
         </div>
-        <div class="faq-item reveal stagger-1">
+        <div class="faq-item">
           <button class="faq-question" type="button" onclick="toggleFaq(this)">
             Qui peut passer cet examen ?
             <div class="faq-icon">+</div>
           </button>
           <div class="faq-answer">Les gardiens de la paix, brigadiers-chefs et majors de police avec au moins 24 mois de service (arrêté du 22 décembre 2023). Pour la Gendarmerie : les gendarmes avec 24 mois de service minimum. NE PAS confondre avec le concours d'officier de police (corps de commandement) qui est un concours de recrutement différent.</div>
         </div>
-        <div class="faq-item reveal stagger-2">
+        <div class="faq-item">
           <button class="faq-question" type="button" onclick="toggleFaq(this)">
             L'app couvre Police Nationale ET Gendarmerie ?
             <div class="faq-icon">+</div>
           </button>
           <div class="faq-answer">Oui. Un toggle PN/GN dans les paramètres adapte l'app à ton corps : les coefficients des épreuves sont ajustés (Ep2 coeff. 3 en GN), l'Épreuve 3 passe en mode "écrit 1 heure" pour la GN (contre oral 20 min pour la PN), et la date d'examen est adaptée (PN : 20 mai 2026 · GN : dernier trimestre).</div>
         </div>
-        <div class="faq-item reveal stagger-3">
+        <div class="faq-item">
           <button class="faq-question" type="button" onclick="toggleFaq(this)">
             Est-ce que ça marche hors connexion ?
             <div class="faq-icon">+</div>
           </button>
           <div class="faq-answer">Oui. L'app est une PWA (Progressive Web App) installable sur ton téléphone comme une vraie app. Une fois installée, tout le contenu est disponible hors ligne. Tu peux réviser dans le métro, au vestiaire, ou en garde sans connexion internet.</div>
         </div>
-        <div class="faq-item reveal stagger-4">
+        <div class="faq-item">
           <button class="faq-question" type="button" onclick="toggleFaq(this)">
             Y a-t-il une période d'essai gratuite ?
             <div class="faq-icon">+</div>
           </button>
           <div class="faq-answer">Oui. Le plan Gratuit est permanent (pas de limite de temps). L'accès PRO inclut 7 jours d'essai gratuit sans carte bancaire. Une offre d'essai est aussi proposée automatiquement après quelques jours d'utilisation.</div>
         </div>
-        <div class="faq-item reveal stagger-5">
+        <div class="faq-item">
           <button class="faq-question" type="button" onclick="toggleFaq(this)">
             Le contenu est-il à jour avec les dernières réformes ?
             <div class="faq-icon">+</div>
@@ -1265,7 +1265,9 @@
     }
 
     function toggleFaq(btn) {
-      const item = btn.parentElement;
+      // Remonter jusqu'au .faq-item même si le clic vient du .faq-icon enfant
+      const item = btn.closest('.faq-item');
+      if (!item) return;
       const isOpen = item.classList.contains('open');
       document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
       if (!isOpen) item.classList.add('open');
